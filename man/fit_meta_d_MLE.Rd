@@ -42,6 +42,7 @@ nR_S2 <- c(4,6,11,13,23,61)
 The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation.
 
 For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
+Please cite that page and their articles if using this command.
 }
 \references{
 Maniscalco, B., & Lau, H. (2012). A signal detection theoretic approach for estimating metacognitive sensitivity from confidence ratings. Consciousness and Cognition. http://dx.doi.org/10.1016/j.concog.2011.09.021

@@ -2,12 +2,17 @@
 % Please edit documentation in R/sdt_functions.R
 \name{fit_meta_d_logL}
 \alias{fit_meta_d_logL}
-\title{Likelihood function for fitting meta-d}
+\title{Likelihood function for fitting meta-d.}
 \usage{
 fit_meta_d_logL(x, parameters)
 }
+\arguments{
+\item{x}{Starting guess for parameter values}
+
+\item{parameters}{Various parameters such as the number of ratings, type 1 d-prime etc.}
+}
 \description{
-Likelihood function for fitting meta-d
+This is a likelihood function for use in MLE estimation, and shouldn't be called directly.
 }
 \author{
 Maniscalco and Lau. Ported to R by Matt Craddock, \email{m.p.craddock@leeds.ac.uk}

@@ -8,14 +8,14 @@ type_1_sdt(df, stimulus = NULL, response = NULL, counts = total,
   confidence = NULL, s = 1, add_constant = TRUE)
 }
 \arguments{
-\item{df}{Raw data frame in long format. Assumes counts already calculated. Expects the response column to be 1 or 0 for reported yes or reported no.}
+\item{df}{Raw data frame in long format. Expects the response column to be 1 or 0 for reported yes or reported no.}
 
 \item{stimulus}{Column name for levels of the stimulus. Should be bare, unquoted. e.g. (stimulus = stimulus)}
 
 \item{response}{Col}
 }
 \description{
-This calculates standard, type 1 SDT measures.
+This calculates standard type 1 SDT measures for 2AFC. The data should be in long format and the response coded as either stimulus A or stimulus B. This should be numerical, with 1 standing for the first level of the stimulus factor, 0 standing for the second (for example). The function assumes that 1 = responded with first level of stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that basis. Note that by default it adds a small constant to all cells to avoid boundary issues.
 }
 \author{
 Matt Craddock, \email{m.p.craddock@leeds.ac.uk}

@@ -1,13 +1,14 @@
 #' Type 1 SDT for a 2AFC design
 #'
-#' This calculates standard, type 1 SDT measures.
+#' This calculates standard type 1 SDT measures for 2AFC. The data should be in long format and the response coded as either stimulus A or stimulus B. This should be numerical, with 1 standing for the first level of the stimulus factor, 0 standing for the second (for example). The function assumes that 1 = responded with first level of stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that basis. Note that by default it adds a small constant to all cells to avoid boundary issues.
 #'
-#' @param df Raw data frame in long format. Assumes counts already calculated. Expects the response column to be 1 or 0 for reported yes or reported no.
+#' @param df Raw data frame in long format. Expects the response column to be 1 or 0 for reported yes or reported no.
 #' @param stimulus Column name for levels of the stimulus. Should be bare, unquoted. e.g. (stimulus = stimulus)
 #' @param response Col
 #' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #' @import dplyr
 #' @import tidyr
+#' @export
 
 type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, confidence = NULL, s = 1, add_constant = TRUE) {
   stim_col <- enquo(stimulus)
@@ -21,28 +22,42 @@ type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, con
     df <- mutate(df, proportions = (!!count_col)/sum((!!count_col)))
   }
 
-  s1_HR <- filter(df, (!!resp_col) == 1)
+  reps_only <- filter(df, (!!resp_col) == 1)
 
-  s1_FA <- sum(df$proportions[5:6])
+  s1_HR <- reps_only$proportions[[1]]
+  s1_FA <- reps_only$proportions[[2]]
+
   d_prime <- (1/s) * qnorm(s1_HR) - qnorm(s1_FA)
   c_raw <- (-1/(1+s)) * (qnorm(s1_HR)+qnorm(s1_FA))
   c_prime <- c_raw / d_prime
   data.frame(d_prime, c_raw, c_prime, s1_HR, s1_FA)
 }
 
-#' Convert to counts
+#' Convert trial-by-trial data to counts.
 #'
+#' This takes a trial-by-trial data frame and reduces it to counts. Intended mainly for use with the type 2 SDT fit_meta_d_MLE function. By default it will split the totals into multiple columns, one for each stimulus, with each row the total for a possible response. It is currently expected that confidence and response are combined into a single column  i.e. Response = "Definitely yes, maybe yes, maybe no, definitely no". Separate columns for confidence and response are not currently supported, but may be in the future.
+#'
+#' @param df Data frame containing single trial data.
+#' @param stimulus Bare column name that contains the stimulus grouping of the trial (e.g. present versus absent).
+#' @param response Bare column name that contains the response to be totalled over. (e.g. yes or no or any combination of confidence and response.)
+#' @param split_resp Defaults to TRUE. Splits the counts into two columns, one for each stimulus.
 #' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #' @import dplyr
 #' @import tidyr
+#' @importFrom rlang UQE
+#' @export
 
-sdt_counts <- function(df, stimulus = NULL, response = NULL, ...) {
+sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE, ...) {
   stim_col <- enquo(stimulus)
   resp_col <- enquo(response)
   df <- group_by(df, !!stim_col, !!resp_col)
   df <- summarise(df, total = n())
   df <- ungroup(df)
   df <- complete_(df, c(rlang::UQE(stim_col), rlang::UQE(resp_col)), fill = list(total = 0))
+  if (split_resp) {
+    df <- spread_(df, quo_name(stim_col), "total")
+  }
+  return(df)
 }
 
 #' Fit Type 2 SDT using Maximum Likelihood Estimation.
@@ -72,6 +87,7 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL, ...) {
 #' The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation.
 #'
 #' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
+#' Please cite that page and their articles if using this command.
 #'
 #' @param nR_S1 Responses to S1 stimulus. See below for advice.
 #' @param nR_S2 Responses to S2 stimulus. See below for advice.
@@ -82,6 +98,7 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL, ...) {
 #' @references Maniscalco, B., & Lau, H. (2012). A signal detection theoretic approach for estimating metacognitive sensitivity from confidence ratings. Consciousness and Cognition. http://dx.doi.org/10.1016/j.concog.2011.09.021
 #' @import dplyr
 #' @import tidyr
+#' @importFrom stats optim pnorm qnorm
 #' @export
 #'
 
@@ -108,6 +125,7 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
   ## set up initial guess at parameter values
   ratingHR  <- NULL
   ratingFAR <- NULL
+
   for (c in 2:(n_ratings * 2)) {
     ratingHR[c-1] <- sum(nR_S2[c:length(nR_S2)]) / sum(nR_S2)
     ratingFAR[c-1] <- sum(nR_S1[c:length(nR_S1)]) / sum(nR_S1)
@@ -131,6 +149,7 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
                  "nR_S2" = nR_S2,
                  "t1c1" = t1c1,
                  "s" = s)
+  #Note that I suppress warnings from the optimizer about NaNs generated while calculating the log-likelihood. They don't effect the final estimates anyway, so the warnings are just annoying
 
   fit <- suppressWarnings(optim(par = guess,
                fit_meta_d_logL,
@@ -199,6 +218,9 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
   meta_da <- sqrt(2 / (1 + s^2)) * s * meta_d1
   mt1c1 <- (meta_d1 * t1c1 / d1)
   t2ca <- (sqrt(2) * s / sqrt(1 + s ^2)) * t2c1
+
+  #Note that the S1units are not currently in the output - may change it to include them
+
   S1units <- data.frame(d1 = d1,
                         meta_d1 = meta_d1,
                         s = s,
@@ -214,7 +236,6 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
                     meta_ca = (sqrt(2) * s / sqrt(1 + s ^2) * mt1c1),
                     t2ca_rS1 = t2ca[1:n_ratings-1],
                     t2ca_rS2 = t2ca[n_ratings:length(t2ca)],
-                    #          S1units = list(S1units),
                     logL = logL,
                     est_HR2_rS1 = est_HR2_rS1,
                     est_HR2_rS2 = est_HR2_rS2,
@@ -230,8 +251,12 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
 }
 
 
-#' Likelihood function for fitting meta-d
+#' Likelihood function for fitting meta-d.
 #'
+#' This is a likelihood function for use in MLE estimation, and shouldn't be called directly.
+#'
+#' @param x Starting guess for parameter values
+#' @param parameters Various parameters such as the number of ratings, type 1 d-prime etc.
 #' @author Maniscalco and Lau. Ported to R by Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #'
 

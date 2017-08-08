@@ -2,12 +2,21 @@
 % Please edit documentation in R/sdt_functions.R
 \name{sdt_counts}
 \alias{sdt_counts}
-\title{Convert to counts}
+\title{Convert trial-by-trial data to counts.}
 \usage{
-sdt_counts(df, stimulus = NULL, response = NULL, ...)
+sdt_counts(df, stimulus = NULL, response = NULL, split_resp = TRUE, ...)
+}
+\arguments{
+\item{df}{Data frame containing single trial data.}
+
+\item{stimulus}{Bare column name that contains the stimulus grouping of the trial (e.g. present versus absent).}
+
+\item{response}{Bare column name that contains the response to be totalled over. (e.g. yes or no or any combination of confidence and response.)}
+
+\item{split_resp}{Defaults to TRUE. Splits the counts into two columns, one for each stimulus.}
 }
 \description{
-Convert to counts
+This takes a trial-by-trial data frame and reduces it to counts. Intended mainly for use with the type 2 SDT fit_meta_d_MLE function. By default it will split the totals into multiple columns, one for each stimulus, with each row the total for a possible response. It is currently expected that confidence and response are combined into a single column  i.e. Response = "Definitely yes, maybe yes, maybe no, definitely no". Separate columns for confidence and response are not currently supported, but may be in the future.
 }
 \author{
 Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
