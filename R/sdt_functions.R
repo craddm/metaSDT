@@ -47,11 +47,35 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL, ...) {
 
 #' Fit Type 2 SDT using Maximum Likelihood Estimation.
 #'
-#' This uses data in count format.
+#' Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
+#'
+#' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
+#' Response: A, rating: 3, count: 60
+#' Response: A, rating: 2, count: 30
+#' Response: A, rating: 1, count: 10
+#' Response: B, rating: 1, count: 7
+#' Response: B, rating: 2, count: 4
+#' Response: B, rating: 3, count: 1
+#'
+#' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#'
+#' For stimulus B, we would have the respective vector for responses to stimulus B, eg:
+#' Response: A, rating: 3, count: 4
+#' Response: A, rating: 2, count: 6
+#' Response: A, rating: 1, count: 11
+#' Response: B, rating: 1, count: 13
+#' Response: B, rating: 2, count: 23
+#' Response: B, rating: 3, count: 61
+#'
+#' nR_S2 <- c(4,6,11,13,23,61)
+#'
+#' The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation.
+#'
+#' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
 #'
 #' @param nR_S1 Responses to S1 stimulus. See below for advice.
 #' @param nR_S2 Responses to S2 stimulus. See below for advice.
-#' @param s Standard deviation. Defaults to 1.
+#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.
 #' @param add_constant Adds a small constant to the data (1/number of possible responses) to account for 0 or 1 values. Defaults to TRUE for ease of use across multiple datasets.
 #'
 #' @author Maniscalco & Lau. Ported to R by Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
