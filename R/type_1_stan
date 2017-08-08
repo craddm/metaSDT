@@ -1,0 +1,22 @@
+// Bayesian estimation of meta-d for a single subject
+
+data {
+    // Type 1 counts
+    int<lower = 1> N;
+    int<lower = 1> S[N];
+    int<lower = 1> H;
+    int<lower = 1> M;
+    int<lower = 1> FA;
+    int<lower = 1> CR;
+}
+
+model {
+  H ~ binomial(h,S)
+  FA ~ binomial(f,N)
+  h = Phi(d1/2-c1)
+  f = Phi(-d1/2-c1)
+
+  # Type 1 priors
+  c1 ~ normal(0, 2)
+  d1 ~ normal(0, 0.5)
+}
