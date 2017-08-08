@@ -21,4 +21,4 @@ Output is a data frame with m-ratio etc.
 
 devtools::install_github("craddm/metaSDT")
 
-Note that the command is liable to change!
+Note that the command is liable to change - although hopefully, the results won't!
