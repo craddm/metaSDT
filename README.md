@@ -3,9 +3,14 @@ A simple R package for calculating (meta-) SDT measures
 
 This is an R implementation of Maniscalco and Lau's method of calculating metacognitive SDT measures using maximum likelihood estimation.
 
-For further details on metacognitive/Type 2 SDT, see their website at http://www.columbia.edu/~bsm2105/type2sdt/
+For further details on metacognitive/Type 2 SDT, see their website at http://www.columbia.edu/~bsm2105/type2sdt/ and the following publications:
+Maniscalco, B., & Lau, H. (2012). A signal detection theoretic approach for estimating metacognitive sensitivity from confidence ratings. Consciousness and Cognition, 21(1), 422–430. doi:10.1016/j.concog.2011.09.021
+
+Maniscalco, B., & Lau, H. (2014). Signal detection theory analysis of type 1 and type 2 data: meta-d’, response-specific meta-d’, and the unequal variance SDT mode. In S. M. Fleming & C. D. Frith (Eds.), The Cognitive Neuroscience of Metacognition (pp.25-66). Springer.
 
 Currently, the fit_meta_d_MLE function is working - more commands are planned/partly implemented, but not yet available for use.
+
+If you use this function, cite the above papers and scripts on which it is based.
 
 The fit_meta_d_MLE command requires data in the same format outlined on M & L's webpage, as follows:
 
