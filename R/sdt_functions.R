@@ -329,12 +329,42 @@ fit_meta_d_logL <- function(x, parameters) {
 
 #'Function for calculating meta-d' by minimizing SSE
 #'
+#'Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
+#'
 #'Where fit_meta_d_MLE uses Maximum Likelihood Estimation, fit_meta_d_SSE works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
+#'
+#'The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
+#' Response: A, rating: 3, count: 60
+#' Response: A, rating: 2, count: 30
+#' Response: A, rating: 1, count: 10
+#' Response: B, rating: 1, count: 7
+#' Response: B, rating: 2, count: 4
+#' Response: B, rating: 3, count: 1
+#'
+#' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#'
+#' For stimulus B, we would have the respective vector for responses to stimulus B, eg:
+#' Response: A, rating: 3, count: 4
+#' Response: A, rating: 2, count: 6
+#' Response: A, rating: 1, count: 11
+#' Response: B, rating: 1, count: 13
+#' Response: B, rating: 2, count: 23
+#' Response: B, rating: 3, count: 61
+#'
+#' nR_S2 <- c(4,6,11,13,23,61)
+#'
+#' The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated through minimizatoin of SSE.
+#'
+#'Currently, multiple rows will be returned when there are more than 2 confidence ratings.
+#'
+#' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
+#' Please cite that page and their articles if using this command.
 #'
 #'
 #'
 #'@import dplyr
 #'@import purrr
+#'@export
 
 fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain = .01, add_constant = TRUE) {
 
