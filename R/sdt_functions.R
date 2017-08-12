@@ -12,6 +12,7 @@
 #' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #' @import dplyr
 #' @import tidyr
+#' @export
 
 type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, s = 1, add_constant = TRUE) {
   stim_col <- enquo(stimulus)

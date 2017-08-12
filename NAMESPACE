@@ -3,6 +3,7 @@
 export(fit_meta_d_MLE)
 export(fit_meta_d_SSE)
 export(sdt_counts)
+export(type_1_sdt)
 import(dplyr)
 import(purrr)
 import(tidyr)
