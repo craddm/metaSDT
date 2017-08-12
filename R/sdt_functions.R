@@ -1,16 +1,19 @@
 #' Type 1 SDT for a 2AFC design
 #'
-#' This calculates standard type 1 SDT measures for 2AFC. The data should be in long format and the response coded as either stimulus A or stimulus B. This should be numerical, with 1 standing for the first level of the stimulus factor, 0 standing for the second (for example). The function assumes that 1 = responded with first level of stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that basis. Note that by default it adds a small constant to all cells to avoid boundary issues.
+#' This calculates standard type 1 SDT measures for 2AFC. The expected data frame format is one column indicating the stimulus (note that the first level of this factor will be treated as stimulus A), one column indicating the response (note - this should be coded with 1 as response A), and one column indicating the total number of responses of that type. Thus, there should be one row per combination of stimulus and response. If your data is in long format (i.e. one row per trial), you can use the \code{sdt_counts} function first to get the data into the expected format. The \code{type_1_sdt} function assumes that 1 = responded with first level of stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that basis. Note that by default it adds a small constant to all cells to avoid boundary issues.
 #'
-#' @param df Raw data frame in long format. Expects the response column to be 1 or 0 for reported yes or reported no.
+#' @param df Data frame. See notes.
 #' @param stimulus Column name for levels of the stimulus. Should be bare, unquoted. e.g. (stimulus = stimulus)
-#' @param response Col
+#' @param response Column name for responses. Should be bare, unquoted. e.g. (response = response).
+#' @param counts Column name for totals. Should be bare, unquoted. Defaults to "total", as this is the column name output by \code{sdt_counts}.
+#' @param s Ratio of standard deviations of stimulus types. Defaults to 1 (equal variance).
+#' @param add_constant Adds a small constant to every cell to account for boundaries - i.e. log-linear correction. Default = TRUE.
+#'
 #' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #' @import dplyr
 #' @import tidyr
-#' @export
 
-type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, confidence = NULL, s = 1, add_constant = TRUE) {
+type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, s = 1, add_constant = TRUE) {
   stim_col <- enquo(stimulus)
   count_col <- enquo(counts)
   resp_col <- enquo(response)
@@ -65,26 +68,40 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE, 
 #' Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
 #'
 #' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
+#'
 #' Response: A, rating: 3, count: 60
+#'
 #' Response: A, rating: 2, count: 30
+#'
 #' Response: A, rating: 1, count: 10
+#'
 #' Response: B, rating: 1, count: 7
+#'
 #' Response: B, rating: 2, count: 4
+#'
 #' Response: B, rating: 3, count: 1
 #'
 #' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
 #'
 #' For stimulus B, we would have the respective vector for responses to stimulus B, eg:
+#'
 #' Response: A, rating: 3, count: 4
+#'
 #' Response: A, rating: 2, count: 6
+#'
 #' Response: A, rating: 1, count: 11
+#'
 #' Response: B, rating: 1, count: 13
+#'
 #' Response: B, rating: 2, count: 23
+#'
 #' Response: B, rating: 3, count: 61
 #'
 #' nR_S2 <- c(4,6,11,13,23,61)
 #'
-#' The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation.
+#' The helper function \code{sdt_counts} can be used to get the data into the right format.
+#'
+#' The output is a data frame with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation. Currently, if more than 2 ratings are present in the data, the output will have multiple rows.
 #'
 #' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
 #' Please cite that page and their articles if using this command.
@@ -327,13 +344,13 @@ fit_meta_d_logL <- function(x, parameters) {
 }
 
 
-#'Function for calculating meta-d' by minimizing SSE
+#' Function for calculating meta-d' by minimizing SSE
 #'
-#'Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
+#' Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
 #'
-#'Where fit_meta_d_MLE uses Maximum Likelihood Estimation, fit_meta_d_SSE works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
+#' Where fit_meta_d_MLE uses Maximum Likelihood Estimation, fit_meta_d_SSE works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
 #'
-#'The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
+#' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
 #' Response: A, rating: 3, count: 60
 #' Response: A, rating: 2, count: 30
 #' Response: A, rating: 1, count: 10
@@ -359,7 +376,6 @@ fit_meta_d_logL <- function(x, parameters) {
 #'
 #' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
 #' Please cite that page and their articles if using this command.
-#'
 #'
 #'
 #'@import dplyr

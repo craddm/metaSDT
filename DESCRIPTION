@@ -1,7 +1,7 @@
 Package: metaSDT
 Type: Package
 Title: Calculate Meta-d Using Maximum Likelihood Estimation
-Version: 0.2.0
+Version: 0.3.1
 Authors@R: c(
   person("Matt", "Craddock", email = "m.p.craddock@leeds.ac.uk", role = "cre"),
   person("Brian", "Maniscalco", role = "aut"),

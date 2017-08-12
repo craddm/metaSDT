@@ -20,26 +20,40 @@ Provides a type-2 SDT analysis of data from a typical experiment in which observ
 }
 \details{
 The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
+
 Response: A, rating: 3, count: 60
+
 Response: A, rating: 2, count: 30
+
 Response: A, rating: 1, count: 10
+
 Response: B, rating: 1, count: 7
+
 Response: B, rating: 2, count: 4
+
 Response: B, rating: 3, count: 1
 
 The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
 
 For stimulus B, we would have the respective vector for responses to stimulus B, eg:
+
 Response: A, rating: 3, count: 4
+
 Response: A, rating: 2, count: 6
+
 Response: A, rating: 1, count: 11
+
 Response: B, rating: 1, count: 13
+
 Response: B, rating: 2, count: 23
+
 Response: B, rating: 3, count: 61
 
 nR_S2 <- c(4,6,11,13,23,61)
 
-The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation.
+The helper function \code{sdt_counts} can be used to get the data into the right format.
+
+The output is a data frame with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation. Currently, if more than 2 ratings are present in the data, the output will have multiple rows.
 
 For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
 Please cite that page and their articles if using this command.
