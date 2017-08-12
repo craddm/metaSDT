@@ -13,5 +13,8 @@ LazyData: true
 Imports: 
   dplyr,
   tidyr,
-  rlang
+  rlang,
+  purrr
+Suggests:
+  testthat
 RoxygenNote: 6.0.1

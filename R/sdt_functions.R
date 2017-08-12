@@ -327,12 +327,16 @@ fit_meta_d_logL <- function(x, parameters) {
 }
 
 
-#'Function for calculating meta-d' using SSE
+#'Function for calculating meta-d' by minimizing SSE
+#'
+#'Where fit_meta_d_MLE uses Maximum Likelihood Estimation, fit_meta_d_SSE works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
+#'
+#'
 #'
 #'@import dplyr
 #'@import purrr
 
-fit_meta_d_sse <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain = .01, add_constant = TRUE) {
+fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain = .01, add_constant = TRUE) {
 
   if (add_constant) {
     nR_S1 <- nR_S1 + (1/length(nR_S1))
@@ -342,18 +346,27 @@ fit_meta_d_sse <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain =
   n_ratings <- length(nR_S1) / 2
   n_criteria <- 2 * n_ratings - 1
 
-  S1_HR <- sum(nR_S1[1:n_ratings])/sum(nR_S1)
-  S1_FA <- sum(nR_S2[1:n_ratings])/sum(nR_S2)
+  S1_HR <- sum(nR_S2[(n_ratings+1):(n_ratings*2)])/sum(nR_S2)
+  S1_FA <- sum(nR_S1[(n_ratings+1):(n_ratings*2)])/sum(nR_S1)
 
   d_1 <- (1/s) * qnorm(S1_HR) - qnorm(S1_FA)
   c_1 <- (-1 / (1 + s)) * (qnorm(S1_HR) + qnorm(S1_FA))
   c_prime <- c_1 / d_1
 
-  obs_HR2_rS2 <- nR_S2[(n_ratings+2):(n_ratings*2)] / sum(nR_S2[(n_ratings+1):(n_ratings*2)])
-  obs_FAR2_rS2 <- nR_S1[(n_ratings+2):(n_ratings*2)] / sum(nR_S1[(n_ratings+1):(n_ratings*2)])
+  obs_HR2_rS1 <- NULL
+  obs_FAR2_rS1 <- NULL
 
-  obs_HR2_rS1 <- nR_S1[1:(n_ratings-1)] / sum(nR_S1[1:n_ratings])
-  obs_FAR2_rS1 <- nR_S2[1:(n_ratings-1)] / sum(nR_S2[1:n_ratings])
+  for (i in 1:(n_ratings-1)) {
+    obs_HR2_rS1[i] <- sum(nR_S1[1:i]) / sum(nR_S1[1:n_ratings])
+    obs_FAR2_rS1[i] <- sum(nR_S2[1:i]) / sum(nR_S2[1:n_ratings])
+  }
+
+  obs_HR2_rS2 <- NULL
+  obs_FAR2_rS2 <- NULL
+  for (i in (n_ratings+2):(2*n_ratings)) {
+    obs_HR2_rS2[(i - (n_ratings+2) + 1)] <- sum(nR_S2[i:(n_ratings*2)]) / sum(nR_S2[(n_ratings+1):(n_ratings*2)])
+    obs_FAR2_rS2[(i - (n_ratings+2) + 1)] <- sum(nR_S1[i:(n_ratings*2)]) / sum(nR_S1[(n_ratings+1):(n_ratings*2)])
+  }
 
   d_grid <- seq(d_min, d_max, by = d_grain)
   c_grid <- c_prime * d_grid
@@ -380,21 +393,31 @@ fit_meta_d_sse <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain =
   est_HR2s_rS1 <- map2(FARs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
   est_FAR2s_rS1 <- map2(HRs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
 
-  SSE <- map2(est_HR2s_rS1, est_FAR2s_rS1,
-              ~(.x - obs_HR2_rS1) ^2 + (.y - obs_FAR2_rS1) ^2)
-  SSE_rS1 <- map_dbl(SSE, min)
-  rS1_ind <- map(SSE, which.min)
+  SSE <- NULL
+  SSE_rS1 <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
+  rS1_ind <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
+  for (n in (1:(n_ratings-1))) {
+    SSE <- map2(est_HR2s_rS1, est_FAR2s_rS1,
+              ~(.x - obs_HR2_rS1[[n]]) ^2 + (.y - obs_FAR2_rS1[[n]]) ^2)
+    SSE_rS1[ ,n] <- map_dbl(SSE, min)
+    rS1_ind[ ,n] <- map_dbl(SSE, which.min)
+  }
 
   # fit type 2 data for S2 responses
   est_HR2s_rS2 <- map2(HRs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
   est_FAR2s_rS2 <- map2(FARs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
 
-  SSE <- map2(est_HR2s_rS2, est_FAR2s_rS2, ~(.x - obs_HR2_rS2) ^2 + (.y - obs_FAR2_rS2) ^2)
-  SSE_rS2 <- map_dbl(SSE, min)
-  rS2_ind <- map(SSE, which.min)
+  SSE_rS2 <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
+  rS2_ind <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
+  for (n in (1:(n_ratings-1))) {
+    SSE <- map2(est_HR2s_rS2, est_FAR2s_rS2,
+                ~(.x - obs_HR2_rS2[[n]]) ^2 + (.y - obs_FAR2_rS2[[n]]) ^2)
+    SSE_rS2[ ,n] <- map_dbl(SSE, min)
+    rS2_ind[ ,n] <- map_dbl(SSE, which.min)
+  }
 
   # update analysis
-  SSEtot <- SSE_rS1 + SSE_rS2
+  SSEtot <- rowSums(SSE_rS1) + rowSums(SSE_rS2)
   SSEmin <- Inf
 
   meta_d <- vector("numeric", 1)
@@ -412,20 +435,22 @@ fit_meta_d_sse <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain =
   est_HR2_rS2  <- est_HR2s_rS2[[min_SSE]][rS2_ind[[min_SSE]]]
   est_FAR2_rS2 <- est_FAR2s_rS2[[min_SSE]][rS2_ind[[min_SSE]]]
 
-  out <- data.frame(d1 = d_1,
-                    meta_d1 = meta_d,
-                    meta_c1 = meta_c,
+  out <- data.frame(da = d_1,
+                    meta_da = meta_d,
+                    M_diff = meta_d - d_1,
+                    M_ratio = meta_d / d_1,
+                    meta_ca = meta_c,
                     s = s,
-                    t2c1_rS1 = t2c_rS1,
-                    t2c1_rS2 = t2c_rS2,
-                    SSE = SSEmin,
+                    t2ca_rS1 = t2c_rS1,
+                    t2ca_rS2 = t2c_rS2,
+                    SSE = SSEtot[[min_SSE]],
                     est_HR2_rS1 = est_HR2_rS1,
-                    est_HR2_rS2 = est_HR2_rS2,
-                    est_FAR2_rS1 = est_FAR2_rS1,
-                    est_FAR2_rS2 = est_FAR2_rS2,
                     obs_HR2_rS1 = obs_HR2_rS1,
+                    est_HR2_rS2 = est_HR2_rS2,
                     obs_HR2_rS2 = obs_HR2_rS2,
+                    est_FAR2_rS1 = est_FAR2_rS1,
                     obs_FAR2_rS1 = obs_FAR2_rS1,
+                    est_FAR2_rS2 = est_FAR2_rS2,
                     obs_FAR2_rS2 = obs_FAR2_rS2)
   return(out)
 }
