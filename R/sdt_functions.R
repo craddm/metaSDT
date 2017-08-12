@@ -441,26 +441,28 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain =
   est_FAR2s_rS1 <- map2(HRs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
 
   SSE <- NULL
-  SSE_rS1 <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
-  rS1_ind <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
+  SSE_rS1 <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings-1)
+  rS1_ind <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings-1)
   for (n in (1:(n_ratings-1))) {
     SSE <- map2(est_HR2s_rS1, est_FAR2s_rS1,
               ~(.x - obs_HR2_rS1[[n]]) ^2 + (.y - obs_FAR2_rS1[[n]]) ^2)
     SSE_rS1[ ,n] <- map_dbl(SSE, min)
-    rS1_ind[ ,n] <- map_dbl(SSE, which.min)
+    inds <- unlist(map(SSE, which.min))
+    rS1_ind[1:length(inds) ,n] <- inds
   }
 
   # fit type 2 data for S2 responses
   est_HR2s_rS2 <- map2(HRs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
   est_FAR2s_rS2 <- map2(FARs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
 
-  SSE_rS2 <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
-  rS2_ind <- matrix(data = NA, nrow = length(d_grid), ncol = n_ratings-1)
+  SSE_rS2 <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings-1)
+  rS2_ind <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings-1)
   for (n in (1:(n_ratings-1))) {
     SSE <- map2(est_HR2s_rS2, est_FAR2s_rS2,
                 ~(.x - obs_HR2_rS2[[n]]) ^2 + (.y - obs_FAR2_rS2[[n]]) ^2)
     SSE_rS2[ ,n] <- map_dbl(SSE, min)
-    rS2_ind[ ,n] <- map_dbl(SSE, which.min)
+    inds <- unlist(map(SSE, which.min))
+    rS2_ind[1:length(inds) ,n] <- inds
   }
 
   # update analysis
