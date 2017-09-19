@@ -4,7 +4,7 @@
 \alias{sdt_counts}
 \title{Convert trial-by-trial data to counts.}
 \usage{
-sdt_counts(df, stimulus = NULL, response = NULL, split_resp = TRUE, ...)
+sdt_counts(df, stimulus = NULL, response = NULL, split_resp = TRUE)
 }
 \arguments{
 \item{df}{Data frame containing single trial data.}

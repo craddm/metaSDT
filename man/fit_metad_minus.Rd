@@ -2,7 +2,7 @@
 % Please edit documentation in R/sdt_functions.R
 \name{fit_metad_minus}
 \alias{fit_metad_minus}
-\title{Internal function for fitting meta_d_negative}
+\title{Internal function for fitting meta_d_minus}
 \usage{
 fit_metad_minus(x0, th, hm, fm)
 }
@@ -13,8 +13,8 @@ fit_metad_minus(x0, th, hm, fm)
 
 \item{hm}{Hit rate for negative responses}
 
-\item{fp}{False positive rate for negative responses}
+\item{fm}{False positive rate for negative responses}
 }
 \description{
-Internal function for fitting meta_d_negative
+Internal function for fitting meta_d_minus
 }

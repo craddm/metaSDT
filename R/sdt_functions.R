@@ -45,13 +45,14 @@ type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, s =
 #' @param stimulus Bare column name that contains the stimulus grouping of the trial (e.g. present versus absent).
 #' @param response Bare column name that contains the response to be totalled over. (e.g. yes or no or any combination of confidence and response.)
 #' @param split_resp Defaults to TRUE. Splits the counts into two columns, one for each stimulus.
+#'
 #' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #' @import dplyr
 #' @import tidyr
 #' @importFrom rlang UQE
 #' @export
 
-sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE, ...) {
+sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE) {
   stim_col <- enquo(stimulus)
   resp_col <- enquo(response)
   df <- group_by(df, !!stim_col, !!resp_col)
@@ -613,11 +614,11 @@ fit_metad_plus <- function(x0, th, hp, fp) {
   x <- c(y1, y2)
 }
 
-#' Internal function for fitting meta_d_negative
+#' Internal function for fitting meta_d_minus
 #' @param x0 Starting parameters.
 #' @param th Theta
 #' @param hm Hit rate for negative responses
-#' @param fp False positive rate for negative responses
+#' @param fm False positive rate for negative responses
 fit_metad_minus <- function(x0, th, hm, fm) {
   y1 <- pnorm(x0[[1]], 0, 1) / pnorm(th * x0[[2]], 0, 1) - hm
   y2 <- pnorm(x0[[1]], x0[[2]], 1) / pnorm(th * x0[[2]], x0[[2]], 1) - fm
