@@ -1,11 +1,12 @@
 Package: metaSDT
 Type: Package
 Title: Calculate Meta-d Using Maximum Likelihood Estimation
-Version: 0.3.1
+Version: 0.4
 Authors@R: c(
   person("Matt", "Craddock", email = "m.p.craddock@leeds.ac.uk", role = "cre"),
   person("Brian", "Maniscalco", role = "aut"),
-  person("Hakwan", "Lau", role = "aut"))
+  person("Hakwan", "Lau", role = "aut"),
+  person("Adam", "Barrett", role = "aut"))
 Description: This is an R implementation of signal detection measures for simple 2 AFC tasks, and of Maniscalco and Lau's method for calculating Type-2 SDT measures of metacognitive efficiency. (see http://www.columbia.edu/~bsm2105/type2sdt/)
 License: What license is it under?
 Encoding: UTF-8
@@ -14,6 +15,7 @@ Imports:
   dplyr,
   tidyr,
   rlang,
+  pracma,
   purrr
 Suggests:
   testthat

@@ -39,7 +39,7 @@ type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, s =
 
 #' Convert trial-by-trial data to counts.
 #'
-#' This takes a trial-by-trial data frame and reduces it to counts. Intended mainly for use with the type 2 SDT fit_meta_d_MLE function. By default it will split the totals into multiple columns, one for each stimulus, with each row the total for a possible response. It is currently expected that confidence and response are combined into a single column  i.e. Response = "Definitely yes, maybe yes, maybe no, definitely no". Separate columns for confidence and response are not currently supported, but may be in the future.
+#' This takes a trial-by-trial data frame and reduces it to counts. Intended mainly for use with the type 2 SDT fit_meta_d_MLE, fit_meta_d_SSE, and fit_meta_d_bal functions. By default it will split the totals into multiple columns, one for each stimulus, with each row the total for a possible response. It is currently expected that confidence and response are combined into a single column  i.e. Response = "Definitely yes, maybe yes, maybe no, definitely no". Separate columns for confidence and response are not currently supported, but may be in the future.
 #'
 #' @param df Data frame containing single trial data.
 #' @param stimulus Bare column name that contains the stimulus grouping of the trial (e.g. present versus absent).
@@ -349,7 +349,7 @@ fit_meta_d_logL <- function(x, parameters) {
 #'
 #' Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
 #'
-#' Where fit_meta_d_MLE uses Maximum Likelihood Estimation, fit_meta_d_SSE works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
+#' Where \code{fit_meta_d_MLE} uses Maximum Likelihood Estimation, \code{fit_meta_d_SSE} works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
 #'
 #' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
 #' Response: A, rating: 3, count: 60
@@ -378,10 +378,17 @@ fit_meta_d_logL <- function(x, parameters) {
 #' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
 #' Please cite that page and their articles if using this command.
 #'
-#'
-#'@import dplyr
-#'@import purrr
-#'@export
+#' @param nR_S1 Responses to S1 stimulus. See below for advice.
+#' @param nR_S2 Responses to S2 stimulus. See below for advice.
+#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.
+#' @param d_min Minimum bound for d'
+#' @param d_max Maximum bound for d'
+#' @param d_grain Resolution of grid of possible parameters between the bounds.
+#' @param add_constant Adds a small constant to the data (1/number of possible responses) to account for 0 or 1 values. Defaults to TRUE for ease of use across multiple datasets.
+#' @author Maniscalco & Lau. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
+#' @import dplyr
+#' @import purrr
+#' @export
 
 fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain = .01, add_constant = TRUE) {
 
@@ -505,11 +512,37 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain =
 }
 
 
-#' Meta-d-balance
+#' Meta-d' balance calculation
 #'
-#' @param data
-#' @import pracma
+#' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
+#' Response: A, rating: 3, count: 60
+#' Response: A, rating: 2, count: 30
+#' Response: A, rating: 1, count: 10
+#' Response: B, rating: 1, count: 7
+#' Response: B, rating: 2, count: 4
+#' Response: B, rating: 3, count: 1
 #'
+#' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#'
+#' For stimulus B, we would have the respective vector for responses to stimulus B, eg:
+#' Response: A, rating: 3, count: 4
+#' Response: A, rating: 2, count: 6
+#' Response: A, rating: 1, count: 11
+#' Response: B, rating: 1, count: 13
+#' Response: B, rating: 2, count: 23
+#' Response: B, rating: 3, count: 61
+#'
+#' nR_S2 <- c(4,6,11,13,23,61)
+
+#' @param nR_S1 Responses to S1 stimulus. See below for advice.
+#' @param nR_S2 Responses to S2 stimulus. See below for advice.
+#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.
+#' @param add_constant Add a small constant to all cells to adjust for boundary issues, and for consistency with the use of this method with other meta-d measures. Note: default for this is FALSE.
+#'
+#' @author Adam Barrett. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
+#' @references Barrett, Dienes, & Seth (2013). Measures of metacognition on signal-detection theoretic models. Psychol Methods, 18. http://dx.doi.org/10.1037/a0033268
+#' @importFrom pracma lsqnonlin
+#' @export
 #'
 
 fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
@@ -536,11 +569,11 @@ fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
   theta_prime <- theta / d_prime
   x0 <- c(theta, d_prime)
   #ep <- fsolve(fit_metad_plus, x0 = x0, tol = 1e-05, maxiter = 200, th = theta_prime, hp = Hp, fp = Fp)
-  ep <- lsqnonlin(fit_metad_plus, x0 = x0, options = list(tolx = 1e-06), th = theta_prime, hp = Hp, fp = Fp)
+  ep <- pracma::lsqnonlin(fit_metad_plus, x0 = x0, options = list(tolx = 1e-06), th = theta_prime, hp = Hp, fp = Fp)
   meta_d_plus <- ep$x[[2]]
   x0 <- c(theta_prime, d_prime)
   #em <- fsolve(fit_metad_minus, x0 = x0, tol = 1e-05, maxiter = 200, th = theta, hm = Hm, fm = Fm)
-  em <- lsqnonlin(fit_metad_minus, x0 = x0, options = list(tolx = 1e-07), th = theta_prime, hm = Hm, fm = Fm)
+  em <- pracma::lsqnonlin(fit_metad_minus, x0 = x0, options = list(tolx = 1e-07), th = theta_prime, hm = Hm, fm = Fm)
   meta_d_neg <- em$x[[2]]
 
   htp <- 1 - pnorm(theta_prime * meta_d_plus, meta_d_plus, s)
@@ -548,14 +581,31 @@ fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
   htm <- 1 - pnorm(theta_prime * meta_d_neg, meta_d_neg, s)
   ftm <- 1 - pnorm(theta_prime * meta_d_neg, 0, 1)
 
+  if (any(c(htp, ftp, htm, ftm) > .95) | any(c(htp, ftp, htm, ftm) < .05)) {
+    stable <- 0
+  } else {
+    stable <- 1
+  }
+
   r <- (S1_HR+S1_FA)/2
+  meta_d_bal <- r * meta_d_plus + (1 - r) * meta_d_neg
+
   data.frame(d_prime = d_prime,
-             meta_d_bal = r * meta_d_plus + (1 - r) * meta_d_neg,
+             meta_d_bal = meta_d_bal,
+             meta_d_ratio = meta_d_bal / d_prime,
+             meta_d_diff = meta_d_bal - d_prime,
+             stable = stable,
              htp = htp,
              ftp = ftp,
              htm = htm,
              ftm = ftm)
 }
+
+#' Internal function for fitting meta_d_plus
+#' @param x0 Starting parameters.
+#' @param th Theta.
+#' @param hp Hit rate for positive responses
+#' @param fp False positive rate for positive responses.
 
 fit_metad_plus <- function(x0, th, hp, fp) {
   y1 <- (1 - pnorm(x0[[1]], x0[[2]], 1)) / (1 - pnorm(th * x0[[2]], x0[[2]], 1)) - hp
@@ -563,6 +613,11 @@ fit_metad_plus <- function(x0, th, hp, fp) {
   x <- c(y1, y2)
 }
 
+#' Internal function for fitting meta_d_negative
+#' @param x0 Starting parameters.
+#' @param th Theta
+#' @param hm Hit rate for negative responses
+#' @param fp False positive rate for negative responses
 fit_metad_minus <- function(x0, th, hm, fm) {
   y1 <- pnorm(x0[[1]], 0, 1) / pnorm(th * x0[[2]], 0, 1) - hm
   y2 <- pnorm(x0[[1]], x0[[2]], 1) / pnorm(th * x0[[2]], x0[[2]], 1) - fm

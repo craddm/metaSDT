@@ -16,7 +16,7 @@ sdt_counts(df, stimulus = NULL, response = NULL, split_resp = TRUE, ...)
 \item{split_resp}{Defaults to TRUE. Splits the counts into two columns, one for each stimulus.}
 }
 \description{
-This takes a trial-by-trial data frame and reduces it to counts. Intended mainly for use with the type 2 SDT fit_meta_d_MLE function. By default it will split the totals into multiple columns, one for each stimulus, with each row the total for a possible response. It is currently expected that confidence and response are combined into a single column  i.e. Response = "Definitely yes, maybe yes, maybe no, definitely no". Separate columns for confidence and response are not currently supported, but may be in the future.
+This takes a trial-by-trial data frame and reduces it to counts. Intended mainly for use with the type 2 SDT fit_meta_d_MLE, fit_meta_d_SSE, and fit_meta_d_bal functions. By default it will split the totals into multiple columns, one for each stimulus, with each row the total for a possible response. It is currently expected that confidence and response are combined into a single column  i.e. Response = "Definitely yes, maybe yes, maybe no, definitely no". Separate columns for confidence and response are not currently supported, but may be in the future.
 }
 \author{
 Matt Craddock, \email{m.p.craddock@leeds.ac.uk}

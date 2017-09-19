@@ -7,11 +7,26 @@
 fit_meta_d_SSE(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
   d_grain = 0.01, add_constant = TRUE)
 }
+\arguments{
+\item{nR_S1}{Responses to S1 stimulus. See below for advice.}
+
+\item{nR_S2}{Responses to S2 stimulus. See below for advice.}
+
+\item{s}{Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.}
+
+\item{d_min}{Minimum bound for d'}
+
+\item{d_max}{Maximum bound for d'}
+
+\item{d_grain}{Resolution of grid of possible parameters between the bounds.}
+
+\item{add_constant}{Adds a small constant to the data (1/number of possible responses) to account for 0 or 1 values. Defaults to TRUE for ease of use across multiple datasets.}
+}
 \description{
 Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
 }
 \details{
-Where fit_meta_d_MLE uses Maximum Likelihood Estimation, fit_meta_d_SSE works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
+Where \code{fit_meta_d_MLE} uses Maximum Likelihood Estimation, \code{fit_meta_d_SSE} works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
 
 The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
 Response: A, rating: 3, count: 60
@@ -39,4 +54,7 @@ Currently, multiple rows will be returned when there are more than 2 confidence 
 
 For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
 Please cite that page and their articles if using this command.
+}
+\author{
+Maniscalco & Lau. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
 }

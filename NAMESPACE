@@ -2,11 +2,13 @@
 
 export(fit_meta_d_MLE)
 export(fit_meta_d_SSE)
+export(fit_meta_d_bal)
 export(sdt_counts)
 export(type_1_sdt)
 import(dplyr)
 import(purrr)
 import(tidyr)
+importFrom(pracma,lsqnonlin)
 importFrom(rlang,UQE)
 importFrom(stats,optim)
 importFrom(stats,pnorm)
