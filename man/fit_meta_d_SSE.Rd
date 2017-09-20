@@ -12,7 +12,8 @@ fit_meta_d_SSE(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
 
 \item{nR_S2}{Responses to S2 stimulus. See below for advice.}
 
-\item{s}{Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.}
+\item{s}{Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
+1.}
 
 \item{d_min}{Minimum bound for d'}
 
@@ -20,41 +21,48 @@ fit_meta_d_SSE(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
 
 \item{d_grain}{Resolution of grid of possible parameters between the bounds.}
 
-\item{add_constant}{Adds a small constant to the data (1/number of possible responses) to account for 0 or 1 values. Defaults to TRUE for ease of use across multiple datasets.}
+\item{add_constant}{Adds a small constant to the data (1/number of possible
+responses) to account for 0 or 1 values. Defaults to TRUE for ease of use
+across multiple datasets.}
 }
 \description{
-Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
+Provides a type-2 SDT analysis of data from a typical experiment in which
+observers discriminate between two response alternatives and provide ratings
+of confidence in their judgements.
 }
 \details{
-Where \code{fit_meta_d_MLE} uses Maximum Likelihood Estimation, \code{fit_meta_d_SSE} works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
+Where \code{fit_meta_d_MLE} uses Maximum Likelihood Estimation,
+\code{fit_meta_d_SSE} works by finding the minimum sum of squared errors. As
+with the MLE method, input is expected as counts for each of two stimulus
+types.
 
-The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
-Response: A, rating: 3, count: 60
-Response: A, rating: 2, count: 30
-Response: A, rating: 1, count: 10
-Response: B, rating: 1, count: 7
-Response: B, rating: 2, count: 4
-Response: B, rating: 3, count: 1
+The expected input is two vectors, one for responses to each stimulus,
+encoding the observers response and confidence. For example, for two stimului
+labelled A and B, with three confidence ratings, participants could respond to
+stimulus A as follows: Response: A, rating: 3, count: 60 Response: A, rating:
+2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating: 1, count:
+7 Response: B, rating: 2, count: 4 Response: B, rating: 3, count: 1
 
 The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
 
-For stimulus B, we would have the respective vector for responses to stimulus B, eg:
-Response: A, rating: 3, count: 4
-Response: A, rating: 2, count: 6
-Response: A, rating: 1, count: 11
-Response: B, rating: 1, count: 13
-Response: B, rating: 2, count: 23
-Response: B, rating: 3, count: 61
+For stimulus B, we would have the respective vector for responses to stimulus
+B, eg: Response: A, rating: 3, count: 4 Response: A, rating: 2, count: 6
+Response: A, rating: 1, count: 11 Response: B, rating: 1, count: 13 Response:
+B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 
 nR_S2 <- c(4,6,11,13,23,61)
 
-The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated through minimizatoin of SSE.
+The output is a dataframe with various metacognitive measures, including
+m-ratio and meta-d, estimated through minimizatoin of SSE.
 
-Currently, multiple rows will be returned when there are more than 2 confidence ratings.
+Currently, multiple rows will be returned when there are more than 2
+confidence ratings.
 
-For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
-Please cite that page and their articles if using this command.
+For more details, see Maniscalco & Lau's webpage
+http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
+articles if using this command.
 }
 \author{
-Maniscalco & Lau. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
+Maniscalco & Lau. Ported to R by Matt Craddock
+ \email{m.p.craddock@leeds.ac.uk}
 }

@@ -1,17 +1,35 @@
 #' Type 1 SDT for a 2AFC design
 #'
-#' This calculates standard type 1 SDT measures for 2AFC. The expected data frame format is one column indicating the stimulus (note that the first level of this factor will be treated as stimulus A), one column indicating the response (note - this should be coded with 1 as response A), and one column indicating the total number of responses of that type. Thus, there should be one row per combination of stimulus and response. If your data is in long format (i.e. one row per trial), you can use the \code{sdt_counts} function first to get the data into the expected format. The \code{type_1_sdt} function assumes that 1 = responded with first level of stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that basis. Note that by default it adds a small constant to all cells to avoid boundary issues.
+#' Calculate standard type 1 SDT measures for 2AFC.
+#'
+#' The expected data frame format is one column indicating the stimulus (note
+#' that the first level of this factor will be treated as stimulus A), one
+#' column indicating the response (note - this should be coded with 1 as
+#' response A), and one column indicating the total number of responses of that
+#' type. Thus, there should be one row per combination of stimulus and response.
+#' If your data is in long format (i.e. one row per trial), you can use the
+#' \code{sdt_counts} function first to get the data into the expected format.
+#' The \code{type_1_sdt} function assumes that 1 = responded with first level of
+#' stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that
+#' basis. Note that by default it adds a small constant to all cells to avoid
+#' boundary issues.
 #'
 #' @param df Data frame. See notes.
-#' @param stimulus Column name for levels of the stimulus. Should be bare, unquoted. e.g. (stimulus = stimulus)
-#' @param response Column name for responses. Should be bare, unquoted. e.g. (response = response).
-#' @param counts Column name for totals. Should be bare, unquoted. Defaults to "total", as this is the column name output by \code{sdt_counts}.
-#' @param s Ratio of standard deviations of stimulus types. Defaults to 1 (equal variance).
-#' @param add_constant Adds a small constant to every cell to account for boundaries - i.e. log-linear correction. Default = TRUE.
+#' @param stimulus Column name for levels of the stimulus. Should be bare,
+#'   unquoted. e.g. (stimulus = stimulus)
+#' @param response Column name for responses. Should be bare, unquoted. e.g.
+#'   (response = response).
+#' @param counts Column name for totals. Should be bare, unquoted. Defaults to
+#'   "total", as this is the column name output by \code{sdt_counts}.
+#' @param s Ratio of standard deviations of stimulus types. Defaults to 1 (equal
+#'   variance).
+#' @param add_constant Adds a small constant to every cell to account for
+#'   boundaries - i.e. log-linear correction. Default = TRUE.
 #'
 #' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #' @import dplyr
 #' @import tidyr
+#' @family type_1_sdt sdt_counts
 #' @export
 
 type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, s = 1, add_constant = TRUE) {
@@ -39,17 +57,29 @@ type_1_sdt <- function(df, stimulus = NULL, response = NULL, counts = total, s =
 
 #' Convert trial-by-trial data to counts.
 #'
-#' This takes a trial-by-trial data frame and reduces it to counts. Intended mainly for use with the type 2 SDT fit_meta_d_MLE, fit_meta_d_SSE, and fit_meta_d_bal functions. By default it will split the totals into multiple columns, one for each stimulus, with each row the total for a possible response. It is currently expected that confidence and response are combined into a single column  i.e. Response = "Definitely yes, maybe yes, maybe no, definitely no". Separate columns for confidence and response are not currently supported, but may be in the future.
+#' Reduces a trial-by-trial data frame to counts.
+#'
+#' Intended mainly for use with the type 2 SDT fit_meta_d_MLE, fit_meta_d_SSE,
+#' and fit_meta_d_bal functions. By default it will split the totals into
+#' multiple columns, one for each stimulus, with each row the total for a
+#' possible response. It is currently expected that confidence and response are
+#' combined into a single column  i.e. Response = "Definitely yes, maybe yes,
+#' maybe no, definitely no". Separate columns for confidence and response are
+#' not currently supported, but may be in the future.
 #'
 #' @param df Data frame containing single trial data.
-#' @param stimulus Bare column name that contains the stimulus grouping of the trial (e.g. present versus absent).
-#' @param response Bare column name that contains the response to be totalled over. (e.g. yes or no or any combination of confidence and response.)
-#' @param split_resp Defaults to TRUE. Splits the counts into two columns, one for each stimulus.
+#' @param stimulus Bare column name that contains the stimulus grouping of the
+#'   trial (e.g. present versus absent).
+#' @param response Bare column name that contains the response to be totalled
+#'   over. (e.g. yes or no or any combination of confidence and response.)
+#' @param split_resp Defaults to TRUE. Splits the counts into two columns, one
+#'   for each stimulus.
 #'
 #' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
 #' @import dplyr
 #' @import tidyr
 #' @importFrom rlang UQE
+#' @family type_1_sdt fit_meta_d_MLE
 #' @export
 
 sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE) {
@@ -67,9 +97,14 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE) 
 
 #' Fit Type 2 SDT using Maximum Likelihood Estimation.
 #'
-#' Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
+#' Provides a type-2 SDT analysis of data from a typical experiment in which
+#' observers discriminate between two response alternatives and provide ratings
+#' of confidence in their judgements.
 #'
-#' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
+#' The expected input is two vectors, one for responses to each stimulus,
+#' encoding the observers response and confidence. For example, for two stimului
+#' labelled A and B, with three confidence ratings, participants could respond
+#' to stimulus A as follows:
 #'
 #' Response: A, rating: 3, count: 60
 #'
@@ -85,7 +120,8 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE) 
 #'
 #' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
 #'
-#' For stimulus B, we would have the respective vector for responses to stimulus B, eg:
+#' For stimulus B, we would have the respective vector for responses to stimulus
+#' B, eg:
 #'
 #' Response: A, rating: 3, count: 4
 #'
@@ -101,20 +137,31 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL, split_resp = TRUE) 
 #'
 #' nR_S2 <- c(4,6,11,13,23,61)
 #'
-#' The helper function \code{sdt_counts} can be used to get the data into the right format.
+#' The helper function \code{sdt_counts} can be used to get the data into the
+#' right format.
 #'
-#' The output is a data frame with various metacognitive measures, including m-ratio and meta-d, estimated using Maximum Likelihood Estimation. Currently, if more than 2 ratings are present in the data, the output will have multiple rows.
+#' The output is a data frame with various metacognitive measures, including
+#' m-ratio and meta-d, estimated using Maximum Likelihood Estimation. Currently,
+#' if more than 2 ratings are present in the data, the output will have multiple
+#' rows.
 #'
-#' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
-#' Please cite that page and their articles if using this command.
+#' For more details, see Maniscalco & Lau's webpage
+#' http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
+#' articles if using this command.
 #'
 #' @param nR_S1 Responses to S1 stimulus. See below for advice.
 #' @param nR_S2 Responses to S2 stimulus. See below for advice.
-#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.
-#' @param add_constant Adds a small constant to the data (1/number of possible responses) to account for 0 or 1 values. Defaults to TRUE for ease of use across multiple datasets.
+#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
+#'   1.
+#' @param add_constant Adds a small constant to the data (1/number of possible
+#'   responses) to account for 0 or 1 values. Defaults to TRUE for ease of use
+#'   across multiple datasets.
 #'
-#' @author Maniscalco & Lau. Ported to R by Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
-#' @references Maniscalco, B., & Lau, H. (2012). A signal detection theoretic approach for estimating metacognitive sensitivity from confidence ratings. Consciousness and Cognition. http://dx.doi.org/10.1016/j.concog.2011.09.021
+#' @author Maniscalco & Lau. Ported to R by Matt Craddock,
+#'   \email{m.p.craddock@leeds.ac.uk}
+#' @references Maniscalco, B., & Lau, H. (2012). A signal detection theoretic
+#'   approach for estimating metacognitive sensitivity from confidence ratings.
+#'   Consciousness and Cognition. http://dx.doi.org/10.1016/j.concog.2011.09.021
 #' @import dplyr
 #' @import tidyr
 #' @importFrom stats optim pnorm qnorm
@@ -273,11 +320,14 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
 
 #' Likelihood function for fitting meta-d.
 #'
-#' This is a likelihood function for use in MLE estimation, and shouldn't be called directly.
+#' This is a likelihood function for use in MLE estimation, and shouldn't be
+#' called directly.
 #'
 #' @param x Starting guess for parameter values
-#' @param parameters Various parameters such as the number of ratings, type 1 d-prime etc.
-#' @author Maniscalco and Lau. Ported to R by Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
+#' @param parameters Various parameters such as the number of ratings, type 1
+#'   d-prime etc.
+#' @author Maniscalco and Lau. Ported to R by Matt Craddock,
+#'   \email{m.p.craddock@leeds.ac.uk}
 #'
 
 fit_meta_d_logL <- function(x, parameters) {
@@ -346,50 +396,58 @@ fit_meta_d_logL <- function(x, parameters) {
 }
 
 
-#' Function for calculating meta-d' by minimizing SSE
+#'Function for calculating meta-d' by minimizing SSE
 #'
-#' Provides a type-2 SDT analysis of data from a typical experiment in which observers discriminate between two response alternatives and provide ratings of confidence in their judgements.
+#'Provides a type-2 SDT analysis of data from a typical experiment in which
+#'observers discriminate between two response alternatives and provide ratings
+#'of confidence in their judgements.
 #'
-#' Where \code{fit_meta_d_MLE} uses Maximum Likelihood Estimation, \code{fit_meta_d_SSE} works by finding the minimum sum of squared errors. As with the MLE method, input is expected as counts for each of two stimulus types.
+#'Where \code{fit_meta_d_MLE} uses Maximum Likelihood Estimation,
+#'\code{fit_meta_d_SSE} works by finding the minimum sum of squared errors. As
+#'with the MLE method, input is expected as counts for each of two stimulus
+#'types.
 #'
-#' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
-#' Response: A, rating: 3, count: 60
-#' Response: A, rating: 2, count: 30
-#' Response: A, rating: 1, count: 10
-#' Response: B, rating: 1, count: 7
-#' Response: B, rating: 2, count: 4
-#' Response: B, rating: 3, count: 1
+#'The expected input is two vectors, one for responses to each stimulus,
+#'encoding the observers response and confidence. For example, for two stimului
+#'labelled A and B, with three confidence ratings, participants could respond to
+#'stimulus A as follows: Response: A, rating: 3, count: 60 Response: A, rating:
+#'2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating: 1, count:
+#'7 Response: B, rating: 2, count: 4 Response: B, rating: 3, count: 1
 #'
-#' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#'The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
 #'
-#' For stimulus B, we would have the respective vector for responses to stimulus B, eg:
-#' Response: A, rating: 3, count: 4
-#' Response: A, rating: 2, count: 6
-#' Response: A, rating: 1, count: 11
-#' Response: B, rating: 1, count: 13
-#' Response: B, rating: 2, count: 23
-#' Response: B, rating: 3, count: 61
+#'For stimulus B, we would have the respective vector for responses to stimulus
+#'B, eg: Response: A, rating: 3, count: 4 Response: A, rating: 2, count: 6
+#'Response: A, rating: 1, count: 11 Response: B, rating: 1, count: 13 Response:
+#'B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 #'
-#' nR_S2 <- c(4,6,11,13,23,61)
+#'nR_S2 <- c(4,6,11,13,23,61)
 #'
-#' The output is a dataframe with various metacognitive measures, including m-ratio and meta-d, estimated through minimizatoin of SSE.
+#'The output is a dataframe with various metacognitive measures, including
+#'m-ratio and meta-d, estimated through minimizatoin of SSE.
 #'
-#'Currently, multiple rows will be returned when there are more than 2 confidence ratings.
+#'Currently, multiple rows will be returned when there are more than 2
+#'confidence ratings.
 #'
-#' For more details, see Maniscalco & Lau's webpage http://www.columbia.edu/~bsm2105/type2sdt/
-#' Please cite that page and their articles if using this command.
+#'For more details, see Maniscalco & Lau's webpage
+#'http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
+#'articles if using this command.
 #'
-#' @param nR_S1 Responses to S1 stimulus. See below for advice.
-#' @param nR_S2 Responses to S2 stimulus. See below for advice.
-#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.
-#' @param d_min Minimum bound for d'
-#' @param d_max Maximum bound for d'
-#' @param d_grain Resolution of grid of possible parameters between the bounds.
-#' @param add_constant Adds a small constant to the data (1/number of possible responses) to account for 0 or 1 values. Defaults to TRUE for ease of use across multiple datasets.
-#' @author Maniscalco & Lau. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
-#' @import dplyr
-#' @import purrr
-#' @export
+#'@param nR_S1 Responses to S1 stimulus. See below for advice.
+#'@param nR_S2 Responses to S2 stimulus. See below for advice.
+#'@param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
+#'  1.
+#'@param d_min Minimum bound for d'
+#'@param d_max Maximum bound for d'
+#'@param d_grain Resolution of grid of possible parameters between the bounds.
+#'@param add_constant Adds a small constant to the data (1/number of possible
+#'  responses) to account for 0 or 1 values. Defaults to TRUE for ease of use
+#'  across multiple datasets.
+#'@author Maniscalco & Lau. Ported to R by Matt Craddock
+#'  \email{m.p.craddock@leeds.ac.uk}
+#'@import dplyr
+#'@import purrr
+#'@export
 
 fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain = .01, add_constant = TRUE) {
 
@@ -515,23 +573,19 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain =
 
 #' Meta-d' balance calculation
 #'
-#' The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
-#' Response: A, rating: 3, count: 60
-#' Response: A, rating: 2, count: 30
-#' Response: A, rating: 1, count: 10
-#' Response: B, rating: 1, count: 7
-#' Response: B, rating: 2, count: 4
-#' Response: B, rating: 3, count: 1
+#' The expected input is two vectors, one for responses to each stimulus,
+#' encoding the observers response and confidence. For example, for two stimului
+#' labelled A and B, with three confidence ratings, participants could respond
+#' to stimulus A as follows: Response: A, rating: 3, count: 60 Response: A,
+#' rating: 2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating:
+#' 1, count: 7 Response: B, rating: 2, count: 4 Response: B, rating: 3, count: 1
 #'
 #' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
 #'
-#' For stimulus B, we would have the respective vector for responses to stimulus B, eg:
-#' Response: A, rating: 3, count: 4
-#' Response: A, rating: 2, count: 6
-#' Response: A, rating: 1, count: 11
-#' Response: B, rating: 1, count: 13
-#' Response: B, rating: 2, count: 23
-#' Response: B, rating: 3, count: 61
+#' For stimulus B, we would have the respective vector for responses to stimulus
+#' B, eg: Response: A, rating: 3, count: 4 Response: A, rating: 2, count: 6
+#' Response: A, rating: 1, count: 11 Response: B, rating: 1, count: 13 Response:
+#' B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 #'
 #' nR_S2 <- c(4,6,11,13,23,61)
 

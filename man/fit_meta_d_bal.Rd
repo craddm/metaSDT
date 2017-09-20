@@ -16,24 +16,20 @@ fit_meta_d_bal(nR_S1, nR_S2, s = 1, add_constant = FALSE)
 \item{add_constant}{Add a small constant to all cells to adjust for boundary issues, and for consistency with the use of this method with other meta-d measures. Note: default for this is FALSE.}
 }
 \description{
-The expected input is two vectors, one for responses to each stimulus, encoding the observers response and confidence. For example, for two stimului labelled A and B, with three confidence ratings, participants could respond to stimulus A as follows:
-Response: A, rating: 3, count: 60
-Response: A, rating: 2, count: 30
-Response: A, rating: 1, count: 10
-Response: B, rating: 1, count: 7
-Response: B, rating: 2, count: 4
-Response: B, rating: 3, count: 1
+The expected input is two vectors, one for responses to each stimulus,
+encoding the observers response and confidence. For example, for two stimului
+labelled A and B, with three confidence ratings, participants could respond
+to stimulus A as follows: Response: A, rating: 3, count: 60 Response: A,
+rating: 2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating:
+1, count: 7 Response: B, rating: 2, count: 4 Response: B, rating: 3, count: 1
 }
 \details{
 The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
 
-For stimulus B, we would have the respective vector for responses to stimulus B, eg:
-Response: A, rating: 3, count: 4
-Response: A, rating: 2, count: 6
-Response: A, rating: 1, count: 11
-Response: B, rating: 1, count: 13
-Response: B, rating: 2, count: 23
-Response: B, rating: 3, count: 61
+For stimulus B, we would have the respective vector for responses to stimulus
+B, eg: Response: A, rating: 3, count: 4 Response: A, rating: 2, count: 6
+Response: A, rating: 1, count: 11 Response: B, rating: 1, count: 13 Response:
+B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 
 nR_S2 <- c(4,6,11,13,23,61)
 }

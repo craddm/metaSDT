@@ -9,11 +9,14 @@ fit_meta_d_logL(x, parameters)
 \arguments{
 \item{x}{Starting guess for parameter values}
 
-\item{parameters}{Various parameters such as the number of ratings, type 1 d-prime etc.}
+\item{parameters}{Various parameters such as the number of ratings, type 1
+d-prime etc.}
 }
 \description{
-This is a likelihood function for use in MLE estimation, and shouldn't be called directly.
+This is a likelihood function for use in MLE estimation, and shouldn't be
+called directly.
 }
 \author{
-Maniscalco and Lau. Ported to R by Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
+Maniscalco and Lau. Ported to R by Matt Craddock,
+  \email{m.p.craddock@leeds.ac.uk}
 }

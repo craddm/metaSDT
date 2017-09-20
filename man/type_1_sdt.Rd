@@ -10,18 +10,36 @@ type_1_sdt(df, stimulus = NULL, response = NULL, counts = total, s = 1,
 \arguments{
 \item{df}{Data frame. See notes.}
 
-\item{stimulus}{Column name for levels of the stimulus. Should be bare, unquoted. e.g. (stimulus = stimulus)}
+\item{stimulus}{Column name for levels of the stimulus. Should be bare,
+unquoted. e.g. (stimulus = stimulus)}
 
-\item{response}{Column name for responses. Should be bare, unquoted. e.g. (response = response).}
+\item{response}{Column name for responses. Should be bare, unquoted. e.g.
+(response = response).}
 
-\item{counts}{Column name for totals. Should be bare, unquoted. Defaults to "total", as this is the column name output by \code{sdt_counts}.}
+\item{counts}{Column name for totals. Should be bare, unquoted. Defaults to
+"total", as this is the column name output by \code{sdt_counts}.}
 
-\item{s}{Ratio of standard deviations of stimulus types. Defaults to 1 (equal variance).}
+\item{s}{Ratio of standard deviations of stimulus types. Defaults to 1 (equal
+variance).}
 
-\item{add_constant}{Adds a small constant to every cell to account for boundaries - i.e. log-linear correction. Default = TRUE.}
+\item{add_constant}{Adds a small constant to every cell to account for
+boundaries - i.e. log-linear correction. Default = TRUE.}
 }
 \description{
-This calculates standard type 1 SDT measures for 2AFC. The expected data frame format is one column indicating the stimulus (note that the first level of this factor will be treated as stimulus A), one column indicating the response (note - this should be coded with 1 as response A), and one column indicating the total number of responses of that type. Thus, there should be one row per combination of stimulus and response. If your data is in long format (i.e. one row per trial), you can use the \code{sdt_counts} function first to get the data into the expected format. The \code{type_1_sdt} function assumes that 1 = responded with first level of stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that basis. Note that by default it adds a small constant to all cells to avoid boundary issues.
+Calculate standard type 1 SDT measures for 2AFC.
+}
+\details{
+The expected data frame format is one column indicating the stimulus (note
+that the first level of this factor will be treated as stimulus A), one
+column indicating the response (note - this should be coded with 1 as
+response A), and one column indicating the total number of responses of that
+type. Thus, there should be one row per combination of stimulus and response.
+If your data is in long format (i.e. one row per trial), you can use the
+\code{sdt_counts} function first to get the data into the expected format.
+The \code{type_1_sdt} function assumes that 1 = responded with first level of
+stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that
+basis. Note that by default it adds a small constant to all cells to avoid
+boundary issues.
 }
 \author{
 Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
