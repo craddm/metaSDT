@@ -596,7 +596,7 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5, d_grain =
 #'
 #' @author Adam Barrett. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
 #' @references Barrett, Dienes, & Seth (2013). Measures of metacognition on signal-detection theoretic models. Psychol Methods, 18. http://dx.doi.org/10.1037/a0033268
-#' @importFrom pracma lsqnonlin
+#' @importFrom nleqslv nleqslv
 #' @export
 #'
 
@@ -608,7 +608,6 @@ fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
   }
 
   n_ratings <- length(nR_S1) / 2
-  n_criteria <- 2 * n_ratings - 1
 
   S1_HR <- sum(nR_S1[1:n_ratings])/sum(nR_S1)
   S1_FA <- sum(nR_S2[1:n_ratings])/sum(nR_S2)
@@ -617,18 +616,21 @@ fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
 
   Hp <- nR_S1[[1]] / sum(nR_S1[1:n_ratings])
   Hm <- nR_S2[[n_ratings*2]] / sum(nR_S2[(n_ratings+1):(n_ratings*2)])
-  Fp <- nR_S1[[n_ratings*2]] / sum(nR_S1[(n_ratings+1):(n_ratings*2)])
-  Fm <- nR_S2[[1]] / sum(nR_S2[1:n_ratings])
+  Fm <- nR_S1[[n_ratings*2]] / sum(nR_S1[(n_ratings+1):(n_ratings*2)])
+  Fp <- nR_S2[[1]] / sum(nR_S2[1:n_ratings])
 
   theta <- -qnorm(S1_FA)
   theta_prime <- theta / d_prime
   x0 <- c(theta, d_prime)
-  #ep <- fsolve(fit_metad_plus, x0 = x0, tol = 1e-05, maxiter = 200, th = theta_prime, hp = Hp, fp = Fp)
-  ep <- pracma::lsqnonlin(fit_metad_plus, x0 = x0, options = list(tolx = 1e-06), th = theta_prime, hp = Hp, fp = Fp)
+  #if any
+  #ep <- fsolve(fit_metad_plus, x0 = x0, tol = 1e-08, maxiter = 200, th = theta_prime, hp = Hp, fp = Fp)
+  ep <- nleqslv(x0, fit_metad_plus, method = "Newton", th = theta_prime, hp = Hp, fp = Fp, global = "pwldog", control = list(delta = "cauchy", ftol = 1e-06), xscalm = "auto")
+  #ep <- pracma::lsqnonlin(fit_metad_plus, x0 = x0, options = list(tolx = 1e-06), th = theta_prime, hp = Hp, fp = Fp)
   meta_d_plus <- ep$x[[2]]
   x0 <- c(theta_prime, d_prime)
-  #em <- fsolve(fit_metad_minus, x0 = x0, tol = 1e-05, maxiter = 200, th = theta, hm = Hm, fm = Fm)
-  em <- pracma::lsqnonlin(fit_metad_minus, x0 = x0, options = list(tolx = 1e-07), th = theta_prime, hm = Hm, fm = Fm)
+  #em <- pracma::fsolve(fit_metad_minus, x0 = x0, tol = 1e-08, maxiter = 200, th = theta_prime, hm = Hm, fm = Fm)
+  #em <- pracma::lsqnonlin(fit_metad_minus, x0 = x0, options = list(tolx = 1e-07), th = theta_prime, hm = Hm, fm = Fm)
+  em <- nleqslv(x0, fit_metad_minus, method = "Newton", th = theta_prime, hm = Hm, fm = Fm, global = "pwldog", control = list(delta = "cauchy", ftol = 1e-06), xscalm = "auto")
   meta_d_neg <- em$x[[2]]
 
   htp <- 1 - pnorm(theta_prime * meta_d_plus, meta_d_plus, s)
@@ -665,8 +667,16 @@ fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
 fit_metad_plus <- function(x0, th, hp, fp) {
   y1 <- (1 - pnorm(x0[[1]], x0[[2]], 1)) / (1 - pnorm(th * x0[[2]], x0[[2]], 1)) - hp
   y2 <- (1 - pnorm(x0[[1]], 0, 1)) / (1 - pnorm(th * x0[[2]], 0, 1)) - fp
-  x <- c(y1, y2)
+  c(y1, y2)
 }
+
+# fit_metad_plus <- function(x0) {
+#   y1 <- (1 - pnorm(x0[[1]], x0[[2]], 1)) / (1 - pnorm(.98 * x0[[2]], x0[[2]], 1)) - 1
+#   y2 <- (1 - pnorm(x0[[1]], 0, 1)) / (1 - pnorm(.98 * x0[[2]], 0, 1)) - 0
+#   x0 <- c(y1, y2)
+#   sum(x0)
+# }
+
 
 #' Internal function for fitting meta_d_minus
 #' @param x0 Starting parameters.
@@ -676,6 +686,5 @@ fit_metad_plus <- function(x0, th, hp, fp) {
 fit_metad_minus <- function(x0, th, hm, fm) {
   y1 <- pnorm(x0[[1]], 0, 1) / pnorm(th * x0[[2]], 0, 1) - hm
   y2 <- pnorm(x0[[1]], x0[[2]], 1) / pnorm(th * x0[[2]], x0[[2]], 1) - fm
-  x0 <- c(y1, y2)
-  x0
+  c(y1, y2)
 }

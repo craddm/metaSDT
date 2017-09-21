@@ -1,7 +1,7 @@
 Package: metaSDT
 Type: Package
 Title: Calculate Type 1 and Type 2 Signal Detection Measures
-Version: 0.4
+Version: 0.4.1
 Authors@R: c(
   person("Matt", "Craddock", email = "m.p.craddock@leeds.ac.uk", role = "cre"),
   person("Brian", "Maniscalco", role = "aut"),
@@ -15,7 +15,7 @@ Imports:
   dplyr,
   tidyr,
   rlang,
-  pracma,
+  nleqslv,
   purrr
 Suggests:
   testthat
