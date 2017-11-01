@@ -3,6 +3,7 @@
 export(fit_meta_d_MLE)
 export(fit_meta_d_SSE)
 export(fit_meta_d_bal)
+export(rating_sdt)
 export(sdt_counts)
 export(type_1_sdt)
 import(dplyr)
