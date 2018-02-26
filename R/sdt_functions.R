@@ -26,7 +26,7 @@
 #' @param add_constant Adds a small constant to every cell to account for
 #'   boundaries - i.e. log-linear correction. Default = TRUE.
 #'
-#' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
+#' @author Matt Craddock, \email{matt@mattcraddock.com}
 #' @import dplyr
 #' @import tidyr
 #' @family type_1_sdt sdt_counts
@@ -166,10 +166,10 @@ rating_sdt <- function (nr_s1, nr_s2, add_constant = FALSE) {
 #' @param split_resp Defaults to TRUE. Splits the counts into two columns, one
 #'   for each stimulus.
 #'
-#' @author Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
+#' @author Matt Craddock, \email{matt@mattcraddock.com}
 #' @import dplyr
 #' @import tidyr
-#' @importFrom rlang UQE
+#' @import rlang
 #' @family type_1_sdt fit_meta_d_MLE
 #' @export
 
@@ -177,13 +177,12 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
                        split_resp = TRUE) {
   stim_col <- enquo(stimulus)
   resp_col <- enquo(response)
-  df <- group_by(df, !!stim_col, !!resp_col)
-  df <- summarise(df, total = n())
-  df <- ungroup(df)
-  df <- complete_(df, c(rlang::UQE(stim_col),
-                        rlang::UQE(resp_col)), fill = list(total = 0))
+  df <- dplyr::group_by(df, !!stim_col, !!resp_col)
+  df <- dplyr::summarise(df, total = n())
+  df <- dplyr::ungroup(df)
+  df <- tidyr::complete(df, !!stim_col, !!resp_col, fill = list(total = 0))
   if (split_resp) {
-    df <- spread_(df, quo_name(stim_col), "total")
+    df <- tidyr::spread(df, !!stim_col, "total")
   }
   return(df)
 }
@@ -251,7 +250,7 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
 #'   across multiple datasets.
 #'
 #' @author Maniscalco & Lau. Ported to R by Matt Craddock,
-#'   \email{m.p.craddock@leeds.ac.uk}
+#'   \email{matt@mattcraddock.com}
 #' @references Maniscalco, B., & Lau, H. (2012). A signal detection theoretic
 #'   approach for estimating metacognitive sensitivity from confidence ratings.
 #'   Consciousness and Cognition. http://dx.doi.org/10.1016/j.concog.2011.09.021
@@ -366,7 +365,6 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
     I_FAR_area_rS1 <- pnorm(t2c1_lower, S2mu, S2sd)
     C_HR_area_rS1  <- pnorm(t2c1_lower, S1mu, S1sd)
 
-
     est_FAR2_rS2[i] <- I_FAR_area_rS2 / I_area_rS2
     est_HR2_rS2[i]  <- C_HR_area_rS2 / C_area_rS2
 
@@ -421,7 +419,7 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
 #' @param parameters Various parameters such as the number of ratings, type 1
 #'   d-prime etc.
 #' @author Maniscalco and Lau. Ported to R by Matt Craddock,
-#'   \email{m.p.craddock@leeds.ac.uk}
+#'   \email{matt@mattcraddock.com}
 #'
 
 fit_meta_d_logL <- function(x, parameters) {
@@ -547,7 +545,7 @@ fit_meta_d_logL <- function(x, parameters) {
 #'  responses) to account for 0 or 1 values. Defaults to TRUE for ease of use
 #'  across multiple datasets.
 #'@author Maniscalco & Lau. Ported to R by Matt Craddock
-#'  \email{m.p.craddock@leeds.ac.uk}
+#'  \email{matt@mattcraddock.com}
 #'@import dplyr
 #'@import purrr
 #'@export
@@ -702,11 +700,17 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
 
 #' @param nR_S1 Responses to S1 stimulus. See below for advice.
 #' @param nR_S2 Responses to S2 stimulus. See below for advice.
-#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.
-#' @param add_constant Add a small constant to all cells to adjust for boundary issues, and for consistency with the use of this method with other meta-d measures. Note: default for this is FALSE.
+#' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
+#'   1.
+#' @param add_constant Add a small constant to all cells to adjust for boundary
+#'   issues, and for consistency with the use of this method with other meta-d
+#'   measures. Note: default for this is FALSE.
 #'
-#' @author Adam Barrett. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
-#' @references Barrett, Dienes, & Seth (2013). Measures of metacognition on signal-detection theoretic models. Psychol Methods, 18. http://dx.doi.org/10.1037/a0033268
+#' @author Adam Barrett. Ported to R by Matt Craddock
+#'   \email{matt@mattcraddock.com}
+#' @references Barrett, Dienes, & Seth (2013). Measures of metacognition on
+#'   signal-detection theoretic models. Psychol Methods, 18.
+#'   http://dx.doi.org/10.1037/a0033268
 #' @importFrom nleqslv nleqslv
 #' @export
 #'
@@ -734,7 +738,7 @@ fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
   theta_prime <- theta / d_prime
   x0 <- c(theta, d_prime)
 
-  ep <- nleqslv(x0, fit_metad_plus, method = "Newton", th = theta_prime,
+  ep <- nleqslv::nleqslv(x0, fit_metad_plus, method = "Newton", th = theta_prime,
                 hp = Hp, fp = Fp, global = "pwldog",
                 control = list(delta = "cauchy", ftol = 1e-06), xscalm = "auto")
 
@@ -790,6 +794,7 @@ fit_metad_plus <- function(x0, th, hp, fp) {
 #' @param th Theta
 #' @param hm Hit rate for negative responses
 #' @param fm False positive rate for negative responses
+
 fit_metad_minus <- function(x0, th, hm, fm) {
   y1 <- pnorm(x0[[1]], 0, 1) / pnorm(th * x0[[2]], 0, 1) - hm
   y2 <- pnorm(x0[[1]], x0[[2]], 1) / pnorm(th * x0[[2]], x0[[2]], 1) - fm
