@@ -79,5 +79,5 @@ Maniscalco, B., & Lau, H. (2012). A signal detection theoretic
 }
 \author{
 Maniscalco & Lau. Ported to R by Matt Craddock,
-  \email{m.p.craddock@leeds.ac.uk}
+  \email{matt@mattcraddock.com}
 }

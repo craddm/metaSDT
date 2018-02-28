@@ -3,10 +3,7 @@ Type: Package
 Title: Calculate Type 1 and Type 2 Signal Detection Measures
 Version: 0.5.0
 Authors@R: c(
-  person("Matt", "Craddock", email = "m.p.craddock@leeds.ac.uk", role = "cre"),
-  person("Brian", "Maniscalco", role = "aut"),
-  person("Hakwan", "Lau", role = "aut"),
-  person("Adam", "Barrett", role = "aut"))
+  person("Matt", "Craddock", email = "matt@mattcraddock.com", role = "cre"))
 Description: Type 1 and Type 2 signal detection measures for simple 2AFC tasks.
 License: What license is it under?
 Encoding: UTF-8

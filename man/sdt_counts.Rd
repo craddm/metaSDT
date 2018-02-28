@@ -31,5 +31,5 @@ maybe no, definitely no". Separate columns for confidence and response are
 not currently supported, but may be in the future.
 }
 \author{
-Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
+Matt Craddock, \email{matt@mattcraddock.com}
 }

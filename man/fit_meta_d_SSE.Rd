@@ -64,5 +64,5 @@ articles if using this command.
 }
 \author{
 Maniscalco & Lau. Ported to R by Matt Craddock
- \email{m.p.craddock@leeds.ac.uk}
+ \email{matt@mattcraddock.com}
 }

@@ -42,5 +42,5 @@ basis. Note that by default it adds a small constant to all cells to avoid
 boundary issues.
 }
 \author{
-Matt Craddock, \email{m.p.craddock@leeds.ac.uk}
+Matt Craddock, \email{matt@mattcraddock.com}
 }

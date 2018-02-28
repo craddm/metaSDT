@@ -11,9 +11,12 @@ fit_meta_d_bal(nR_S1, nR_S2, s = 1, add_constant = FALSE)
 
 \item{nR_S2}{Responses to S2 stimulus. See below for advice.}
 
-\item{s}{Ratio of standard deviations for the S1 and S2 stimulus. Defaults to 1.}
+\item{s}{Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
+1.}
 
-\item{add_constant}{Add a small constant to all cells to adjust for boundary issues, and for consistency with the use of this method with other meta-d measures. Note: default for this is FALSE.}
+\item{add_constant}{Add a small constant to all cells to adjust for boundary
+issues, and for consistency with the use of this method with other meta-d
+measures. Note: default for this is FALSE.}
 }
 \description{
 The expected input is two vectors, one for responses to each stimulus,
@@ -34,8 +37,11 @@ B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 nR_S2 <- c(4,6,11,13,23,61)
 }
 \references{
-Barrett, Dienes, & Seth (2013). Measures of metacognition on signal-detection theoretic models. Psychol Methods, 18. http://dx.doi.org/10.1037/a0033268
+Barrett, Dienes, & Seth (2013). Measures of metacognition on
+  signal-detection theoretic models. Psychol Methods, 18.
+  http://dx.doi.org/10.1037/a0033268
 }
 \author{
-Adam Barrett. Ported to R by Matt Craddock \email{m.p.craddock@leeds.ac.uk}
+Adam Barrett. Ported to R by Matt Craddock
+  \email{matt@mattcraddock.com}
 }
