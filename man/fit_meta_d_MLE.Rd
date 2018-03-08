@@ -64,9 +64,10 @@ The helper function \code{sdt_counts} can be used to get the data into the
 right format.
 
 The output is a data frame with various metacognitive measures, including
-m-ratio and meta-d, estimated using Maximum Likelihood Estimation. Currently,
-if more than 2 ratings are present in the data, the output will have multiple
-rows.
+m-ratio and meta-d, estimated using Maximum Likelihood Estimation. The output
+will have n-1 rows, where n is the number of confidence ratings. Most
+measures are duplicated across rows, but some vary, as they reflect cutpoints
+between the confidence levels.
 
 For more details, see Maniscalco & Lau's webpage
 http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their

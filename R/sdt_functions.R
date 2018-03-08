@@ -233,9 +233,10 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
 #' right format.
 #'
 #' The output is a data frame with various metacognitive measures, including
-#' m-ratio and meta-d, estimated using Maximum Likelihood Estimation. Currently,
-#' if more than 2 ratings are present in the data, the output will have multiple
-#' rows.
+#' m-ratio and meta-d, estimated using Maximum Likelihood Estimation. The output
+#' will have n-1 rows, where n is the number of confidence ratings. Most
+#' measures are duplicated across rows, but some vary, as they reflect cutpoints
+#' between the confidence levels.
 #'
 #' For more details, see Maniscalco & Lau's webpage
 #' http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
@@ -525,10 +526,11 @@ fit_meta_d_logL <- function(x, parameters) {
 #'nR_S2 <- c(4,6,11,13,23,61)
 #'
 #'The output is a dataframe with various metacognitive measures, including
-#'m-ratio and meta-d, estimated through minimizatoin of SSE.
+#'m-ratio and meta-d, estimated through minimization of SSE.
 #'
 #'Currently, multiple rows will be returned when there are more than 2
-#'confidence ratings.
+#'confidence ratings, with some values varying, as they represent cutpoints
+#'between confidence ratings, and others simply duplicated.
 #'
 #'For more details, see Maniscalco & Lau's webpage
 #'http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their

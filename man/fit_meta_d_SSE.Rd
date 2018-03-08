@@ -53,10 +53,11 @@ B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 nR_S2 <- c(4,6,11,13,23,61)
 
 The output is a dataframe with various metacognitive measures, including
-m-ratio and meta-d, estimated through minimizatoin of SSE.
+m-ratio and meta-d, estimated through minimization of SSE.
 
 Currently, multiple rows will be returned when there are more than 2
-confidence ratings.
+confidence ratings, with some values varying, as they represent cutpoints
+between confidence ratings, and others simply duplicated.
 
 For more details, see Maniscalco & Lau's webpage
 http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
