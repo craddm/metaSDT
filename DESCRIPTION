@@ -5,7 +5,7 @@ Date: 2018-05-04
 Version: 0.5.0
 Authors@R: c(
   person("Matt", "Craddock", email = "matt@mattcraddock.com", role = "cre"))
-Description: Type 1 and Type 2 signal detection measures for simple 2AFC tasks.
+Description: Type 1 and Type 2 signal detection measures for simple 2AFC and rating tasks.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
