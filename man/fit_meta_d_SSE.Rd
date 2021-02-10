@@ -4,8 +4,15 @@
 \alias{fit_meta_d_SSE}
 \title{Function for calculating meta-d' by minimizing SSE}
 \usage{
-fit_meta_d_SSE(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
-  d_grain = 0.01, add_constant = TRUE)
+fit_meta_d_SSE(
+  nR_S1,
+  nR_S2,
+  s = 1,
+  d_min = -5,
+  d_max = 5,
+  d_grain = 0.01,
+  add_constant = TRUE
+)
 }
 \arguments{
 \item{nR_S1}{Responses to S1 stimulus. See below for advice.}

@@ -56,7 +56,11 @@ type_1_sdt <- function(df, stimulus = NULL, response = NULL,
   d_prime <- (1 / s) * qnorm(s1_HR) - qnorm(s1_FA)
   c_raw <- (-1 / (1 + s)) * (qnorm(s1_HR) + qnorm(s1_FA))
   c_prime <- c_raw / d_prime
-  data.frame(d_prime, c_raw, c_prime, s1_HR, s1_FA)
+  data.frame(d_prime,
+             c_raw,
+             c_prime,
+             s1_HR,
+             s1_FA)
 }
 
 #' Type 1 SDT for rating data
@@ -107,14 +111,16 @@ type_1_sdt <- function(df, stimulus = NULL, response = NULL,
 #' The output is a data frame with various Type-1 measures, one for each
 #' criterion.
 #'
-#' @param nR_S1 Responses to S1 stimulus. See below for advice.
-#' @param nR_S2 Responses to S2 stimulus. See below for advice.
+#' @param nr_s1 Responses to S1 stimulus. See below for advice.
+#' @param nr_s2 Responses to S2 stimulus. See below for advice.
 #' @param add_constant Adds a small constant to every cell to account for
 #'   boundaries - i.e. log-linear correction. Default = TRUE.
-#' @author Matt Craddock \email{matt@mattcraddock.com}
+#' @author Matt Craddock \email{matt@@mattcraddock.com}
 #' @export
 
-rating_sdt <- function (nr_s1, nr_s2, add_constant = FALSE) {
+rating_sdt <- function(nr_s1,
+                       nr_s2,
+                       add_constant = FALSE) {
 
   if (add_constant) {
     nr_s1 <- nr_s1 + (1 / length(nr_s1))
@@ -175,8 +181,8 @@ rating_sdt <- function (nr_s1, nr_s2, add_constant = FALSE) {
 
 sdt_counts <- function(df, stimulus = NULL, response = NULL,
                        split_resp = TRUE) {
-  stim_col <- enquo(stimulus)
-  resp_col <- enquo(response)
+  stim_col <- rlang::enquo(stimulus)
+  resp_col <- rlang::enquo(response)
   df <- dplyr::group_by(df, !!stim_col, !!resp_col)
   df <- dplyr::summarise(df, total = n())
   df <- dplyr::ungroup(df)
@@ -184,7 +190,7 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
   if (split_resp) {
     df <- tidyr::spread(df, !!stim_col, "total")
   }
-  return(df)
+  df
 }
 
 #' Fit Type 2 SDT using Maximum Likelihood Estimation.
@@ -294,7 +300,7 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
   d1 <- (1 / s) * qnorm(ratingHR[t1_index]) - qnorm(ratingFAR[t1_index])
   meta_d1 <- d1
 
-  c1 <- (-1 / (1 + s)) * ( qnorm(ratingHR) + qnorm(ratingFAR) )
+  c1 <- (-1 / (1 + s)) * (qnorm(ratingHR) + qnorm(ratingFAR) )
   t1c1 <- c1[t1_index]
   t2c1 <- c1[t2_index]
 
@@ -547,9 +553,9 @@ fit_meta_d_logL <- function(x, parameters) {
 #'  responses) to account for 0 or 1 values. Defaults to TRUE for ease of use
 #'  across multiple datasets.
 #'@author Maniscalco & Lau. Ported to R by Matt Craddock
-#'  \email{matt@mattcraddock.com}
+#'  \email{matt@@mattcraddock.com}
 #'@import dplyr
-#'@import purrr
+#'@importFrom purrr map_dbl map2 map
 #'@export
 
 fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
@@ -590,7 +596,9 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
       sum(nR_S1[(n_ratings + 1):(n_ratings * 2)])
   }
 
-  d_grid <- seq(d_min, d_max, by = d_grain)
+  d_grid <- seq(d_min,
+                d_max,
+                by = d_grain)
   c_grid <- c_prime * d_grid
 
   S1mu <- -d_grid / 2
@@ -598,47 +606,53 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
   S1sd <- 1
   S2sd <- 1 / s
 
-  bounds <- 5 * max(S1sd, S2sd)
+  bounds <- 5 * max(S1sd,
+                    S2sd)
   SSEmin <- Inf
 
-  param_space <- map2(S1mu, S2mu,
-                      ~seq(.x - bounds, .y + bounds, by = .001)) # param space
+  param_space <- purrr::map2(S1mu,
+                            S2mu,
+                      ~seq(.x - bounds,
+                           .y + bounds,
+                           by = .001)) # param space
 
-  min_z <- map2(param_space, c_grid, ~min(abs(.x - .y)))
-  c_ind <- map2(param_space, c_grid, ~which.min(abs(.x - .y)))
+  min_z <- purrr::map2(param_space, c_grid, ~min(abs(.x - .y)))
+  c_ind <- purrr::map2(param_space,
+                      c_grid,
+                      ~which.min(abs(.x - .y)))
 
-  HRs <- map2(param_space, S2mu,
+  HRs <- purrr::map2(param_space, S2mu,
               ~ 1 - (pnorm(.x, .y, S2sd)))
-  FARs <- map2(param_space, S1mu,
+  FARs <- purrr::map2(param_space, S1mu,
                ~ 1 - (pnorm(.x, .y, S1sd)))
 
   # fit type 2 data for S1 responses
-  est_HR2s_rS1 <- map2(FARs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
-  est_FAR2s_rS1 <- map2(HRs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
+  est_HR2s_rS1 <- purrr::map2(FARs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
+  est_FAR2s_rS1 <- purrr::map2(HRs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
 
   SSE <- NULL
   SSE_rS1 <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
   rS1_ind <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
 
   for (n in (1:(n_ratings - 1))) {
-    SSE <- map2(est_HR2s_rS1, est_FAR2s_rS1,
+    SSE <- purrr::map2(est_HR2s_rS1, est_FAR2s_rS1,
               ~ (.x - obs_HR2_rS1[[n]]) ^ 2 + (.y - obs_FAR2_rS1[[n]]) ^ 2)
-    SSE_rS1[, n] <- map_dbl(SSE, min)
-    inds <- unlist(map(SSE, which.min))
+    SSE_rS1[, n] <- purrr::map_dbl(SSE, min)
+    inds <- unlist(purrr::map(SSE, which.min))
     rS1_ind[1:length(inds), n] <- inds
   }
 
   # fit type 2 data for S2 responses
-  est_HR2s_rS2 <- map2(HRs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
-  est_FAR2s_rS2 <- map2(FARs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
+  est_HR2s_rS2 <- purrr::map2(HRs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
+  est_FAR2s_rS2 <- purrr::map2(FARs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
 
   SSE_rS2 <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
   rS2_ind <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
   for (n in (1:(n_ratings - 1))) {
-    SSE <- map2(est_HR2s_rS2, est_FAR2s_rS2,
+    SSE <- purrr::map2(est_HR2s_rS2, est_FAR2s_rS2,
                 ~(.x - obs_HR2_rS2[[n]]) ^ 2 + (.y - obs_FAR2_rS2[[n]]) ^ 2)
-    SSE_rS2[, n] <- map_dbl(SSE, min)
-    inds <- unlist(map(SSE, which.min))
+    SSE_rS2[, n] <- purrr::map_dbl(SSE, min)
+    inds <- unlist(purrr::map(SSE, which.min))
     rS2_ind[1:length(inds), n] <- inds
   }
 
@@ -717,7 +731,10 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
 #' @export
 #'
 
-fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
+fit_meta_d_bal <- function(nR_S1,
+                           nR_S2,
+                           s = 1,
+                           add_constant = FALSE) {
 
   if (add_constant) {
     nR_S1 <- nR_S1 + (1 / length(nR_S1))
@@ -778,10 +795,12 @@ fit_meta_d_bal <- function (nR_S1, nR_S2, s = 1, add_constant = FALSE) {
 }
 
 #' Internal function for fitting meta_d_plus
+#'
 #' @param x0 Starting parameters.
 #' @param th Theta.
 #' @param hp Hit rate for positive responses
 #' @param fp False positive rate for positive responses.
+#' @keywords internal
 
 fit_metad_plus <- function(x0, th, hp, fp) {
   y1 <- (1 - pnorm(x0[[1]], x0[[2]], 1)) /
@@ -792,11 +811,12 @@ fit_metad_plus <- function(x0, th, hp, fp) {
 
 
 #' Internal function for fitting meta_d_minus
+#'
 #' @param x0 Starting parameters.
 #' @param th Theta
 #' @param hm Hit rate for negative responses
 #' @param fm False positive rate for negative responses
-
+#' @keywords internal
 fit_metad_minus <- function(x0, th, hm, fm) {
   y1 <- pnorm(x0[[1]], 0, 1) / pnorm(th * x0[[2]], 0, 1) - hm
   y2 <- pnorm(x0[[1]], x0[[2]], 1) / pnorm(th * x0[[2]], x0[[2]], 1) - fm

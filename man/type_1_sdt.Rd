@@ -4,8 +4,14 @@
 \alias{type_1_sdt}
 \title{Type 1 SDT for a 2AFC design}
 \usage{
-type_1_sdt(df, stimulus = NULL, response = NULL, counts = total, s = 1,
-  add_constant = TRUE)
+type_1_sdt(
+  df,
+  stimulus = NULL,
+  response = NULL,
+  counts = total,
+  s = 1,
+  add_constant = TRUE
+)
 }
 \arguments{
 \item{df}{Data frame. See notes.}
@@ -44,3 +50,4 @@ boundary issues.
 \author{
 Matt Craddock, \email{matt@mattcraddock.com}
 }
+\concept{type_1_sdt sdt_counts}

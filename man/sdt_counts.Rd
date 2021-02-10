@@ -33,3 +33,4 @@ not currently supported, but may be in the future.
 \author{
 Matt Craddock, \email{matt@mattcraddock.com}
 }
+\concept{type_1_sdt fit_meta_d_MLE}

@@ -18,3 +18,4 @@ fit_metad_minus(x0, th, hm, fm)
 \description{
 Internal function for fitting meta_d_minus
 }
+\keyword{internal}

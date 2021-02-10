@@ -18,3 +18,4 @@ fit_metad_plus(x0, th, hp, fp)
 \description{
 Internal function for fitting meta_d_plus
 }
+\keyword{internal}

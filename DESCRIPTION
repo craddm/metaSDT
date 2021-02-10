@@ -1,12 +1,12 @@
 Package: metaSDT
 Type: Package
 Title: Calculate Type 1 and Type 2 Signal Detection Measures
-Date: 2018-05-04
+Date: 2021-02-10
 Version: 0.5.0
 Authors@R: c(
   person("Matt", "Craddock", email = "matt@mattcraddock.com", role = "cre"))
 Description: Type 1 and Type 2 signal detection measures for simple 2AFC tasks.
-License: What license is it under?
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
@@ -17,4 +17,6 @@ Imports:
   purrr
 Suggests:
   testthat
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.1
+URL: https://github.com/craddm/metaSDT
+BugReports: https://github.com/craddm/metaSDT/issues

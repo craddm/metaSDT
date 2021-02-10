@@ -7,12 +7,12 @@
 rating_sdt(nr_s1, nr_s2, add_constant = FALSE)
 }
 \arguments{
+\item{nr_s1}{Responses to S1 stimulus. See below for advice.}
+
+\item{nr_s2}{Responses to S2 stimulus. See below for advice.}
+
 \item{add_constant}{Adds a small constant to every cell to account for
 boundaries - i.e. log-linear correction. Default = TRUE.}
-
-\item{nR_S1}{Responses to S1 stimulus. See below for advice.}
-
-\item{nR_S2}{Responses to S2 stimulus. See below for advice.}
 }
 \description{
 Provides a Type-1 SDT analysis of data from a rating experiment in which
