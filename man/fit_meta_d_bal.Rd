@@ -36,12 +36,22 @@ B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 
 nR_S2 <- c(4,6,11,13,23,61)
 }
+\examples{
+nR_S1 <- c(60,30,10,7,4,1)
+nR_S2 <- c(4,6,11,13,23,61)
+fit_meta_d_bal(nR_S1, nR_S2)
+}
 \references{
 Barrett, Dienes, & Seth (2013). Measures of metacognition on
   signal-detection theoretic models. Psychol Methods, 18.
   http://dx.doi.org/10.1037/a0033268
 }
+\seealso{
+Other [meta_d]: 
+\code{\link{fit_meta_d_SSE}()}
+}
 \author{
 Adam Barrett. Ported to R by Matt Craddock
   \email{matt@mattcraddock.com}
 }
+\concept{[meta_d]}

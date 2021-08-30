@@ -73,6 +73,11 @@ For more details, see Maniscalco & Lau's webpage
 http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
 articles if using this command.
 }
+\examples{
+nR_S1 <- c(60,30,10,7,4,1)
+nR_S2 <- c(4,6,11,13,23,61)
+fit_meta_d_MLE(nR_S1, nR_S2)
+}
 \references{
 Maniscalco, B., & Lau, H. (2012). A signal detection theoretic
   approach for estimating metacognitive sensitivity from confidence ratings.

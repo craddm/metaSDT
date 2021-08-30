@@ -6,8 +6,8 @@
 \usage{
 type_1_sdt(
   df,
-  stimulus = NULL,
-  response = NULL,
+  stimulus = stimulus,
+  response = response,
   counts = total,
   s = 1,
   add_constant = TRUE
@@ -17,10 +17,10 @@ type_1_sdt(
 \item{df}{Data frame. See notes.}
 
 \item{stimulus}{Column name for levels of the stimulus. Should be bare,
-unquoted. e.g. (stimulus = stimulus)}
+unquoted. Default is `stimulus`}
 
-\item{response}{Column name for responses. Should be bare, unquoted. e.g.
-(response = response).}
+\item{response}{Column name for responses. Should be bare, unquoted. Default
+is `response`.}
 
 \item{counts}{Column name for totals. Should be bare, unquoted. Defaults to
 "total", as this is the column name output by \code{sdt_counts}.}
@@ -46,6 +46,16 @@ The \code{type_1_sdt} function assumes that 1 = responded with first level of
 stimulus factor (e.g. 1 = stimulus A), and will calculate d-prime on that
 basis. Note that by default it adds a small constant to all cells to avoid
 boundary issues.
+}
+\examples{
+type_1_test <- data.frame(
+                 expand.grid(
+                   stimulus = c("A", "B"),
+                   response = c(1, 2)
+                 ),
+                 total = c(30, 10, 8, 32)
+                 )
+type_1_sdt(type_1_test)
 }
 \author{
 Matt Craddock, \email{matt@mattcraddock.com}

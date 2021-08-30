@@ -62,6 +62,11 @@ right format.
 The output is a data frame with various Type-1 measures, one for each
 criterion.
 }
+\examples{
+nr_s1 <- c(60,30,10,7,4,1)
+nr_s2 <- c(4,6,11,13,23,61)
+rating_sdt(nr_s1, nr_s2)
+}
 \author{
 Matt Craddock \email{matt@mattcraddock.com}
 }
