@@ -16,9 +16,9 @@
 #'
 #' @param df Data frame. See notes.
 #' @param stimulus Column name for levels of the stimulus. Should be bare,
-#'   unquoted. e.g. (stimulus = stimulus)
-#' @param response Column name for responses. Should be bare, unquoted. e.g.
-#'   (response = response).
+#'   unquoted. Default is `stimulus`
+#' @param response Column name for responses. Should be bare, unquoted. Default
+#'   is `response`.
 #' @param counts Column name for totals. Should be bare, unquoted. Defaults to
 #'   "total", as this is the column name output by \code{sdt_counts}.
 #' @param s Ratio of standard deviations of stimulus types. Defaults to 1 (equal
@@ -30,10 +30,23 @@
 #' @import dplyr
 #' @import tidyr
 #' @family type_1_sdt sdt_counts
+#' @examples
+#' type_1_test <- data.frame(
+#'                  expand.grid(
+#'                    stimulus = c("A", "B"),
+#'                    response = c(1, 2)
+#'                  ),
+#'                  total = c(30, 10, 8, 32)
+#'                  )
+#' type_1_sdt(type_1_test)
 #' @export
 
-type_1_sdt <- function(df, stimulus = NULL, response = NULL,
-                       counts = total, s = 1, add_constant = TRUE) {
+type_1_sdt <- function(df,
+                       stimulus = stimulus,
+                       response = response,
+                       counts = total,
+                       s = 1,
+                       add_constant = TRUE) {
 
   stim_col <- dplyr::enquo(stimulus)
   count_col <- dplyr::enquo(counts)
@@ -116,6 +129,10 @@ type_1_sdt <- function(df, stimulus = NULL, response = NULL,
 #' @param add_constant Adds a small constant to every cell to account for
 #'   boundaries - i.e. log-linear correction. Default = TRUE.
 #' @author Matt Craddock \email{matt@@mattcraddock.com}
+#' @examples
+#' nr_s1 <- c(60,30,10,7,4,1)
+#' nr_s2 <- c(4,6,11,13,23,61)
+#' rating_sdt(nr_s1, nr_s2)
 #' @export
 
 rating_sdt <- function(nr_s1,
@@ -264,6 +281,10 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
 #' @import dplyr
 #' @import tidyr
 #' @importFrom stats optim pnorm qnorm
+#' @examples
+#' nR_S1 <- c(60,30,10,7,4,1)
+#' nR_S2 <- c(4,6,11,13,23,61)
+#' fit_meta_d_MLE(nR_S1, nR_S2)
 #' @export
 #'
 
@@ -410,8 +431,8 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
                     obs_HR2_rS1 = obs_HR2_rS1,
                     obs_HR2_rS2 = obs_HR2_rS2,
                     obs_FAR2_rS1 = obs_FAR2_rS1,
-                    obs_FAR2_rS2 = obs_FAR2_rS2
-
+                    obs_FAR2_rS2 = obs_FAR2_rS2,
+                    t1c1 = t1c1
   )
   return(fit)
 }
@@ -426,7 +447,7 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
 #' @param parameters Various parameters such as the number of ratings, type 1
 #'   d-prime etc.
 #' @author Maniscalco and Lau. Ported to R by Matt Craddock,
-#'   \email{matt@mattcraddock.com}
+#'   \email{matt@@mattcraddock.com}
 #'
 
 fit_meta_d_logL <- function(x, parameters) {
@@ -556,6 +577,11 @@ fit_meta_d_logL <- function(x, parameters) {
 #'  \email{matt@@mattcraddock.com}
 #'@import dplyr
 #'@importFrom purrr map_dbl map2 map
+#' @family [meta_d]
+#' @examples
+#' nR_S1 <- c(60,30,10,7,4,1)
+#' nR_S2 <- c(4,6,11,13,23,61)
+#' fit_meta_d_SSE(nR_S1, nR_S2)
 #'@export
 
 fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
@@ -616,43 +642,67 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
                            .y + bounds,
                            by = .001)) # param space
 
-  min_z <- purrr::map2(param_space, c_grid, ~min(abs(.x - .y)))
+  min_z <- purrr::map2(param_space,
+                       c_grid,
+                       ~min(abs(.x - .y)))
   c_ind <- purrr::map2(param_space,
-                      c_grid,
+                       c_grid,
                       ~which.min(abs(.x - .y)))
 
   HRs <- purrr::map2(param_space, S2mu,
-              ~ 1 - (pnorm(.x, .y, S2sd)))
+                     ~ 1 - (pnorm(.x, .y, S2sd)))
   FARs <- purrr::map2(param_space, S1mu,
-               ~ 1 - (pnorm(.x, .y, S1sd)))
+                      ~ 1 - (pnorm(.x, .y, S1sd)))
 
   # fit type 2 data for S1 responses
-  est_HR2s_rS1 <- purrr::map2(FARs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
-  est_FAR2s_rS1 <- purrr::map2(HRs, c_ind, ~(1 - .x[1:.y]) / (1 - .x[.y]))
+  est_HR2s_rS1 <- purrr::map2(FARs,
+                              c_ind,
+                              ~(1 - .x[1:.y]) / (1 - .x[.y]))
+  est_FAR2s_rS1 <- purrr::map2(HRs,
+                               c_ind,
+                               ~(1 - .x[1:.y]) / (1 - .x[.y]))
 
   SSE <- NULL
-  SSE_rS1 <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
-  rS1_ind <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
+  SSE_rS1 <- matrix(data = NaN,
+                    nrow = length(d_grid),
+                    ncol = n_ratings - 1)
+  rS1_ind <- matrix(data = NaN,
+                    nrow = length(d_grid),
+                    ncol = n_ratings - 1)
 
   for (n in (1:(n_ratings - 1))) {
-    SSE <- purrr::map2(est_HR2s_rS1, est_FAR2s_rS1,
-              ~ (.x - obs_HR2_rS1[[n]]) ^ 2 + (.y - obs_FAR2_rS1[[n]]) ^ 2)
-    SSE_rS1[, n] <- purrr::map_dbl(SSE, min)
-    inds <- unlist(purrr::map(SSE, which.min))
+    SSE <-
+      purrr::map2(est_HR2s_rS1,
+                  est_FAR2s_rS1,
+                  ~ (.x - obs_HR2_rS1[[n]]) ^ 2 + (.y - obs_FAR2_rS1[[n]]) ^ 2)
+    SSE_rS1[, n] <- purrr::map_dbl(SSE,
+                                   min)
+    inds <- unlist(purrr::map(SSE,
+                              which.min))
     rS1_ind[1:length(inds), n] <- inds
   }
 
   # fit type 2 data for S2 responses
-  est_HR2s_rS2 <- purrr::map2(HRs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
-  est_FAR2s_rS2 <- purrr::map2(FARs, c_ind, ~ .x[.y:length(.x)] / .x[.y])
+  est_HR2s_rS2 <- purrr::map2(HRs,
+                              c_ind,
+                              ~ .x[.y:length(.x)] / .x[.y])
+  est_FAR2s_rS2 <- purrr::map2(FARs,
+                               c_ind,
+                               ~ .x[.y:length(.x)] / .x[.y])
 
-  SSE_rS2 <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
-  rS2_ind <- matrix(data = NaN, nrow = length(d_grid), ncol = n_ratings - 1)
+  SSE_rS2 <- matrix(data = NaN,
+                    nrow = length(d_grid),
+                    ncol = n_ratings - 1)
+  rS2_ind <- matrix(data = NaN,
+                    nrow = length(d_grid),
+                    ncol = n_ratings - 1)
   for (n in (1:(n_ratings - 1))) {
-    SSE <- purrr::map2(est_HR2s_rS2, est_FAR2s_rS2,
-                ~(.x - obs_HR2_rS2[[n]]) ^ 2 + (.y - obs_FAR2_rS2[[n]]) ^ 2)
+    SSE <- purrr::map2(est_HR2s_rS2,
+                       est_FAR2s_rS2,
+                       ~(.x - obs_HR2_rS2[[n]]) ^ 2 + (.y - obs_FAR2_rS2[[n]]) ^ 2)
     SSE_rS2[, n] <- purrr::map_dbl(SSE, min)
-    inds <- unlist(purrr::map(SSE, which.min))
+    inds <- unlist(purrr::map(SSE,
+                              which.min))
     rS2_ind[1:length(inds), n] <- inds
   }
 
@@ -691,7 +741,8 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
                     est_FAR2_rS1 = est_FAR2_rS1,
                     obs_FAR2_rS1 = obs_FAR2_rS1,
                     est_FAR2_rS2 = est_FAR2_rS2,
-                    obs_FAR2_rS2 = obs_FAR2_rS2)
+                    obs_FAR2_rS2 = obs_FAR2_rS2,
+                    t1c1 = c_1)
   return(out)
 }
 
@@ -728,6 +779,11 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
 #'   signal-detection theoretic models. Psychol Methods, 18.
 #'   http://dx.doi.org/10.1037/a0033268
 #' @importFrom nleqslv nleqslv
+#' @family [meta_d]
+#' @examples
+#' nR_S1 <- c(60,30,10,7,4,1)
+#' nR_S2 <- c(4,6,11,13,23,61)
+#' fit_meta_d_bal(nR_S1, nR_S2)
 #' @export
 #'
 
@@ -747,6 +803,7 @@ fit_meta_d_bal <- function(nR_S1,
   S1_FA <- sum(nR_S2[1:n_ratings]) / sum(nR_S2)
 
   d_prime <- (1 / s) * qnorm(S1_HR) - qnorm(S1_FA)
+  t1c1 <- (-1 / (1 + s)) * (qnorm(S1_HR) + qnorm(S1_FA))
 
   Hp <- nR_S1[[1]] / sum(nR_S1[1:n_ratings])
   Hm <- nR_S2[[n_ratings * 2]] / sum(nR_S2[(n_ratings + 1):(n_ratings * 2)])
@@ -791,7 +848,8 @@ fit_meta_d_bal <- function(nR_S1,
              htp = htp,
              ftp = ftp,
              htm = htm,
-             ftm = ftm)
+             ftm = ftm,
+             t1c1 = t1c1)
 }
 
 #' Internal function for fitting meta_d_plus
