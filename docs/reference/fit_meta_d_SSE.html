@@ -74,7 +74,7 @@ of confidence in their judgements." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">metaSDT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -193,11 +193,28 @@ between confidence ratings, and others simply duplicated.</p>
 <p>For more details, see Maniscalco &amp; Lau's webpage
 http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
 articles if using this command.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other [meta_d]: 
+<code><a href='fit_meta_d_bal.html'>fit_meta_d_bal</a>()</code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Maniscalco &amp; Lau. Ported to R by Matt Craddock
  <a href='mailto:matt@mattcraddock.com'>matt@mattcraddock.com</a></p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>nR_S1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60</span>,<span class='fl'>30</span>,<span class='fl'>10</span>,<span class='fl'>7</span>,<span class='fl'>4</span>,<span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>nR_S2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>,<span class='fl'>6</span>,<span class='fl'>11</span>,<span class='fl'>13</span>,<span class='fl'>23</span>,<span class='fl'>61</span><span class='op'>)</span>
+<span class='fu'>fit_meta_d_SSE</span><span class='op'>(</span><span class='va'>nR_S1</span>, <span class='va'>nR_S2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;         da meta_da     M_diff  M_ratio  meta_ca s t2ca_rS1 t2ca_rS2         SSE
+#&gt; 1 2.136046    2.18 0.04395359 1.020577 0.158411 1   -0.902     0.59 0.009150561
+#&gt; 2 2.136046    2.18 0.04395359 1.020577 0.158411 1   -0.902     0.59 0.009150561
+#&gt;   est_HR2_rS1 obs_HR2_rS1 est_HR2_rS2 obs_HR2_rS2 est_FAR2_rS1 obs_FAR2_rS1
+#&gt; 1   0.6426976   0.5986733   0.8388158   0.8649573    0.1319847    0.1937984
+#&gt; 2   0.6426976   0.8988391   0.8388158   0.6273504    0.1319847    0.4806202
+#&gt;   est_FAR2_rS2 obs_FAR2_rS2      t1c1
+#&gt; 1    0.4384137   0.42666667 0.1552171
+#&gt; 2    0.4384137   0.09333333 0.1552171</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

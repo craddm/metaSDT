@@ -74,7 +74,7 @@ of confidence in their judgements." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">metaSDT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -189,6 +189,19 @@ articles if using this command.</p>
     <p>Maniscalco &amp; Lau. Ported to R by Matt Craddock,
   <a href='mailto:matt@mattcraddock.com'>matt@mattcraddock.com</a></p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>nR_S1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60</span>,<span class='fl'>30</span>,<span class='fl'>10</span>,<span class='fl'>7</span>,<span class='fl'>4</span>,<span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>nR_S2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>,<span class='fl'>6</span>,<span class='fl'>11</span>,<span class='fl'>13</span>,<span class='fl'>23</span>,<span class='fl'>61</span><span class='op'>)</span>
+<span class='fu'>fit_meta_d_MLE</span><span class='op'>(</span><span class='va'>nR_S1</span>, <span class='va'>nR_S2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;         da s  meta_da      M_diff  M_ratio   meta_ca   t2ca_rS1  t2ca_rS2
+#&gt; 1 2.136046 1 2.142318 0.006271186 1.002936 0.1556728 -0.9532436 0.5391273
+#&gt; 2 2.136046 1 2.142318 0.006271186 1.002936 0.1556728 -0.2621161 1.0598268
+#&gt;        logL est_HR2_rS1 est_HR2_rS2 est_FAR2_rS1 est_FAR2_rS2 obs_HR2_rS1
+#&gt; 1 -213.0009   0.8884315   0.8568546    0.5068716    0.4881415   0.8988391
+#&gt; 2 -213.0009   0.6144916   0.6152454    0.1192676    0.1504886   0.5986733
+#&gt;   obs_HR2_rS2 obs_FAR2_rS1 obs_FAR2_rS2      t1c1
+#&gt; 1   0.8649573    0.4806202   0.42666667 0.1552171
+#&gt; 2   0.6273504    0.1937984   0.09333333 0.1552171</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

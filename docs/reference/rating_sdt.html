@@ -74,7 +74,7 @@ of confidence in their judgements." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">metaSDT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -171,6 +171,16 @@ criterion.</p>
 
     <p>Matt Craddock <a href='mailto:matt@mattcraddock.com'>matt@mattcraddock.com</a></p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>nr_s1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60</span>,<span class='fl'>30</span>,<span class='fl'>10</span>,<span class='fl'>7</span>,<span class='fl'>4</span>,<span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>nr_s2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>,<span class='fl'>6</span>,<span class='fl'>11</span>,<span class='fl'>13</span>,<span class='fl'>23</span>,<span class='fl'>61</span><span class='op'>)</span>
+<span class='fu'>rating_sdt</span><span class='op'>(</span><span class='va'>nr_s1</span>, <span class='va'>nr_s2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;   false_alarms hit_rates        z_fa       z_hr   dprime   Adprime    Aprime
+#&gt; 1   0.03389831 0.5357143 -1.82635630 0.08964235 1.915999 0.9122618 0.6936546
+#&gt; 2   0.08474576 0.8035714 -1.37383947 0.85444740 2.228287 0.9424452 0.8346623
+#&gt; 3   0.17796610 0.8928571 -0.92314393 1.24186679 2.165011 0.9371022 0.8683008
+#&gt; 4   0.28813559 0.9553571 -0.55883961 1.69917766 2.258017 0.9448292 0.8885190
+#&gt; 5   0.48305085 0.9910714 -0.04249801 2.36856706 2.411065 0.9558916 0.8738314</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

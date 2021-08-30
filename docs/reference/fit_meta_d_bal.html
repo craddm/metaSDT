@@ -77,7 +77,7 @@ rating: 2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating:
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">metaSDT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -166,11 +166,23 @@ B, rating: 2, count: 23 Response: B, rating: 3, count: 61</p>
     <p>Barrett, Dienes, &amp; Seth (2013). Measures of metacognition on
   signal-detection theoretic models. Psychol Methods, 18.
   http://dx.doi.org/10.1037/a0033268</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other [meta_d]: 
+<code><a href='fit_meta_d_SSE.html'>fit_meta_d_SSE</a>()</code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Adam Barrett. Ported to R by Matt Craddock
   <a href='mailto:matt@mattcraddock.com'>matt@mattcraddock.com</a></p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='va'>nR_S1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60</span>,<span class='fl'>30</span>,<span class='fl'>10</span>,<span class='fl'>7</span>,<span class='fl'>4</span>,<span class='fl'>1</span><span class='op'>)</span>
+<span class='va'>nR_S2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>,<span class='fl'>6</span>,<span class='fl'>11</span>,<span class='fl'>13</span>,<span class='fl'>23</span>,<span class='fl'>61</span><span class='op'>)</span>
+<span class='fu'>fit_meta_d_bal</span><span class='op'>(</span><span class='va'>nR_S1</span>, <span class='va'>nR_S2</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;    d_prime meta_d_bal meta_d_ratio  meta_d_diff stable       htp       ftp
+#&gt; 1 2.165011   2.165243     1.000107 0.0002318857      1 0.8358748 0.2336946
+#&gt;         htm      ftm       t1c1
+#&gt; 1 0.9390267 0.125132 -0.1593614</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

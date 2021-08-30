@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">metaSDT</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -70,7 +70,7 @@
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#metasdt" class="anchor"></a>metaSDT</h1></div>
 <!-- badges: start -->
-<!-- badges: end -->
+
 <p>This is an R implementation of Maniscalco and Lau’s methods of calculating metacognitive SDT measures using maximum likelihood estimation and minimization of the sum of squared errors.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -79,19 +79,43 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">"craddm/metaSDT"</span><span class="op">)</span></code></pre></div>
-<p>For further details on metacognitive/Type 2 SDT, see their website at <a href="http://www.columbia.edu/~bsm2105/type2sdt/" class="uri">http://www.columbia.edu/~bsm2105/type2sdt/</a> and the following publications: Maniscalco, B., &amp; Lau, H. (2012). A signal detection theoretic approach for estimating metacognitive sensitivity from confidence ratings. Consciousness and Cognition, 21(1), 422–430. <a href="doi:10.1016/j.concog.2011.09.021" class="uri">doi:10.1016/j.concog.2011.09.021</a></p>
+<p>For further details on metacognitive/Type 2 SDT, see their website at <a href="http://www.columbia.edu/~bsm2105/type2sdt/" class="uri">http://www.columbia.edu/~bsm2105/type2sdt/</a> and the following publications:</p>
+<p>Maniscalco, B., &amp; Lau, H. (2012). A signal detection theoretic approach for estimating metacognitive sensitivity from confidence ratings. Consciousness and Cognition, 21(1), 422–430. <a href="doi:10.1016/j.concog.2011.09.021" class="uri">doi:10.1016/j.concog.2011.09.021</a></p>
 <p>Maniscalco, B., &amp; Lau, H. (2014). Signal detection theory analysis of type 1 and type 2 data: meta-d’, response-specific meta-d’, and the unequal variance SDT mode. In S. M. Fleming &amp; C. D. Frith (Eds.), The Cognitive Neuroscience of Metacognition (pp.25-66). Springer.</p>
-<p>If you use these function, cite the above papers and scripts on which it is based.</p>
-<p>The fit_meta_d_SSE and fit_meta_d_MLE commands require data in the same format outlined on M &amp; L’s webpage, as follows:</p>
+<p>If you use these functions, cite the above papers and scripts on which it is based.</p>
+<p>The <code>fit_meta_d_SSE</code> and <code>fit_meta_d_MLE</code> commands require data in the same format outlined on M &amp; L’s webpage, as follows:</p>
 <p>Suppose there are two stimuli, A, and B, and three confidence ratings. The possible responses are</p>
 <p>A1, A2, A3, B3, B2, B1.</p>
 <p>Input to the function should be counts for each of these responses separately for each stimulus type.</p>
 <p>So for example:</p>
-<ul>
-<li>nR_S1 &lt;- c(100,50,30,20,10,4)</li>
-<li>nR_S2 &lt;- c(4, 20, 21, 35, 60, 90)</li>
-</ul>
-<p>fit_MLE &lt;- fit_meta_d_MLE(nR_S1, nR_S2) fit_SSE &lt;- fit_meta_d_SSE(nR_S1, nR_S2)</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/craddm/metaSDT">metaSDT</a></span><span class="op">)</span>
+<span class="va">nR_S1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">100</span>, <span class="fl">50</span>, <span class="fl">30</span>, <span class="fl">20</span>, <span class="fl">10</span>, <span class="fl">4</span><span class="op">)</span>
+<span class="va">nR_S2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fl">20</span>, <span class="fl">21</span>, <span class="fl">35</span>, <span class="fl">60</span>, <span class="fl">90</span><span class="op">)</span>
+<span class="va">fit_MLE</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_meta_d_MLE.html">fit_meta_d_MLE</a></span><span class="op">(</span><span class="va">nR_S1</span>,
+                          <span class="va">nR_S2</span><span class="op">)</span>
+<span class="va">fit_MLE</span>
+<span class="co">#&gt;         da s meta_da     M_diff  M_ratio    meta_ca   t2ca_rS1  t2ca_rS2</span>
+<span class="co">#&gt; 1 1.845043 1 1.87284 0.02779706 1.015066 0.07108153 -1.0297441 0.5524547</span>
+<span class="co">#&gt; 2 1.845043 1 1.87284 0.02779706 1.015066 0.07108153 -0.3710477 1.2052824</span>
+<span class="co">#&gt;        logL est_HR2_rS1 est_HR2_rS2 est_FAR2_rS1 est_FAR2_rS2 obs_HR2_rS1</span>
+<span class="co">#&gt; 1 -444.1742   0.8469277   0.8052557    0.4938669    0.4352026   0.8328717</span>
+<span class="co">#&gt; 2 -444.1742   0.5489194   0.4885083    0.1273860    0.1027034   0.5549400</span>
+<span class="co">#&gt;   obs_HR2_rS2 obs_FAR2_rS1 obs_FAR2_rS2       t1c1</span>
+<span class="co">#&gt; 1   0.8104223   0.53479853    0.4154589 0.07002653</span>
+<span class="co">#&gt; 2   0.4860737   0.09157509    0.1207729 0.07002653</span>
+<span class="va">fit_SSE</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_meta_d_SSE.html">fit_meta_d_SSE</a></span><span class="op">(</span><span class="va">nR_S1</span>,
+                          <span class="va">nR_S2</span><span class="op">)</span>
+<span class="va">fit_SSE</span>
+<span class="co">#&gt;         da meta_da     M_diff  M_ratio    meta_ca s t2ca_rS1 t2ca_rS2</span>
+<span class="co">#&gt; 1 1.845043    1.89 0.04495688 1.024366 0.07173282 1   -1.057    0.568</span>
+<span class="co">#&gt; 2 1.845043    1.89 0.04495688 1.024366 0.07173282 1   -1.057    0.568</span>
+<span class="co">#&gt;          SSE est_HR2_rS1 obs_HR2_rS1 est_HR2_rS2 obs_HR2_rS2 est_FAR2_rS1</span>
+<span class="co">#&gt; 1 0.00246936   0.5386789   0.5549400   0.7999733   0.8104223     0.118341</span>
+<span class="co">#&gt; 2 0.00246936   0.5386789   0.8328717   0.7999733   0.4860737     0.118341</span>
+<span class="co">#&gt;   obs_FAR2_rS1 est_FAR2_rS2 obs_FAR2_rS2       t1c1</span>
+<span class="co">#&gt; 1   0.09157509    0.4214078    0.4154589 0.07002653</span>
+<span class="co">#&gt; 2   0.53479853    0.4214078    0.1207729 0.07002653</span></code></pre></div>
 <p>Output is a data frame with m-ratio etc.</p>
 </div>
 </div>
@@ -121,7 +145,13 @@
 </ul>
 </div>
 
-  </div>
+  <div class="dev-status">
+<h2>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/craddm/metaSDT/actions"><img src="https://github.com/craddm/metaSDT/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+</ul>
+</div>
+</div>
 </div>
 
 
