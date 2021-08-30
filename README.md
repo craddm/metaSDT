@@ -6,6 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/craddm/metaSDT/workflows/R-CMD-check/badge.svg)](https://github.com/craddm/metaSDT/actions)
+[![DOI](https://zenodo.org/badge/99712128.svg)](https://zenodo.org/badge/latestdoi/99712128)
 <!-- badges: end -->
 
 This is an R implementation of Maniscalco and Lau’s methods of
