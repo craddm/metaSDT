@@ -23,7 +23,7 @@ You can install `metaSDT`’s development version from
 devtools::install_github("craddm/metaSDT")
 ```
 
-For further details on metacognitive/Type 2 SDT, see their website at
+For further details on metacognitive/Type 2 SDT, see Maniscalco & Lau's website at
 <http://www.columbia.edu/~bsm2105/type2sdt/> and the following
 publications:
 
