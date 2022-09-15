@@ -5,3 +5,6 @@
 ^LICENSE\.md$
 ^README\.Rmd$
 ^\.github$
+^CITATION\.cff$
+^codemeta\.json$
+^\.vscode$

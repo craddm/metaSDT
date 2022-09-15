@@ -4,12 +4,12 @@
 \alias{fit_meta_d_MLE}
 \title{Fit Type 2 SDT using Maximum Likelihood Estimation.}
 \usage{
-fit_meta_d_MLE(nR_S1, nR_S2, s = 1, add_constant = TRUE)
+fit_meta_d_MLE(nr_s1, nr_s2, s = 1, add_constant = TRUE)
 }
 \arguments{
-\item{nR_S1}{Responses to S1 stimulus. See below for advice.}
+\item{nr_s1}{Responses to S1 stimulus. See below for advice.}
 
-\item{nR_S2}{Responses to S2 stimulus. See below for advice.}
+\item{nr_s2}{Responses to S2 stimulus. See below for advice.}
 
 \item{s}{Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
 1.}
@@ -41,7 +41,7 @@ Response: B, rating: 2, count: 4
 
 Response: B, rating: 3, count: 1
 
-The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+The appropriate vector would be nr_s1 <- c(60,30,10,7,4,1)
 
 For stimulus B, we would have the respective vector for responses to stimulus
 B, eg:
@@ -58,7 +58,7 @@ Response: B, rating: 2, count: 23
 
 Response: B, rating: 3, count: 61
 
-nR_S2 <- c(4,6,11,13,23,61)
+nr_s2 <- c(4,6,11,13,23,61)
 
 The helper function \code{sdt_counts} can be used to get the data into the
 right format.
@@ -74,9 +74,9 @@ http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
 articles if using this command.
 }
 \examples{
-nR_S1 <- c(60,30,10,7,4,1)
-nR_S2 <- c(4,6,11,13,23,61)
-fit_meta_d_MLE(nR_S1, nR_S2)
+nr_s1 <- c(60,30,10,7,4,1)
+nr_s2 <- c(4,6,11,13,23,61)
+fit_meta_d_MLE(nr_s1, nr_s2)
 }
 \references{
 Maniscalco, B., & Lau, H. (2012). A signal detection theoretic

@@ -5,8 +5,8 @@
 \title{Function for calculating meta-d' by minimizing SSE}
 \usage{
 fit_meta_d_SSE(
-  nR_S1,
-  nR_S2,
+  nr_s1,
+  nr_s2,
   s = 1,
   d_min = -5,
   d_max = 5,
@@ -15,9 +15,9 @@ fit_meta_d_SSE(
 )
 }
 \arguments{
-\item{nR_S1}{Responses to S1 stimulus. See below for advice.}
+\item{nr_s1}{Responses to S1 stimulus. See below for advice.}
 
-\item{nR_S2}{Responses to S2 stimulus. See below for advice.}
+\item{nr_s2}{Responses to S2 stimulus. See below for advice.}
 
 \item{s}{Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
 1.}
@@ -50,14 +50,14 @@ stimulus A as follows: Response: A, rating: 3, count: 60 Response: A, rating:
 2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating: 1, count:
 7 Response: B, rating: 2, count: 4 Response: B, rating: 3, count: 1
 
-The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+The appropriate vector would be nr_s1 <- c(60,30,10,7,4,1)
 
 For stimulus B, we would have the respective vector for responses to stimulus
 B, eg: Response: A, rating: 3, count: 4 Response: A, rating: 2, count: 6
 Response: A, rating: 1, count: 11 Response: B, rating: 1, count: 13 Response:
 B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 
-nR_S2 <- c(4,6,11,13,23,61)
+nr_s2 <- c(4,6,11,13,23,61)
 
 The output is a dataframe with various metacognitive measures, including
 m-ratio and meta-d, estimated through minimization of SSE.
@@ -71,9 +71,9 @@ http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
 articles if using this command.
 }
 \examples{
-nR_S1 <- c(60,30,10,7,4,1)
-nR_S2 <- c(4,6,11,13,23,61)
-fit_meta_d_SSE(nR_S1, nR_S2)
+nr_s1 <- c(60,30,10,7,4,1)
+nr_s2 <- c(4,6,11,13,23,61)
+fit_meta_d_SSE(nr_s1, nr_s2)
 }
 \seealso{
 Other [meta_d]: 

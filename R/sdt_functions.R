@@ -56,7 +56,7 @@ type_1_sdt <- function(df,
 
   if (add_constant) {
     df <- dplyr::mutate(df, proportions = ((!!count_col) + 1 /
-                                       n()) / (sum((!!count_col)) + 1))
+                                       dplyr::n()) / (sum((!!count_col)) + 1))
   } else {
     df <- dplyr::mutate(df, proportions = (!!count_col) / sum((!!count_col)))
   }
@@ -201,7 +201,7 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
   stim_col <- rlang::enquo(stimulus)
   resp_col <- rlang::enquo(response)
   df <- dplyr::group_by(df, !!stim_col, !!resp_col)
-  df <- dplyr::summarise(df, total = n())
+  df <- dplyr::summarise(df, total = dplyr::n())
   df <- dplyr::ungroup(df)
   df <- tidyr::complete(df, !!stim_col, !!resp_col, fill = list(total = 0))
   if (split_resp) {
@@ -321,7 +321,7 @@ fit_meta_d_MLE <- function(nr_s1, nr_s2, s = 1, add_constant = TRUE) {
   d1 <- (1 / s) * qnorm(ratingHR[t1_index]) - qnorm(ratingFAR[t1_index])
   meta_d1 <- d1
 
-  c1 <- (-1 / (1 + s)) * (qnorm(ratingHR) + qnorm(ratingFAR) )
+  c1 <- (-1 / (1 + s)) * (qnorm(ratingHR) + qnorm(ratingFAR))
   t1c1 <- c1[t1_index]
   t2c1 <- c1[t2_index]
 
@@ -359,18 +359,18 @@ fit_meta_d_MLE <- function(nr_s1, nr_s2, s = 1, add_constant = TRUE) {
   obs_HR2_rS1 <- matrix(0, nrow = n_ratings - 1)
 
   for (i in 2:n_ratings) {
-    obs_FAR2_rS2[i - 1] <- sum(I_nR_rS2[i:length(I_nR_rS2)] ) / sum(I_nR_rS2)
-    obs_HR2_rS2[i - 1]  <- sum(C_nR_rS2[i:length(I_nR_rS2)] ) / sum(C_nR_rS2)
+    obs_FAR2_rS2[i - 1] <- sum(I_nR_rS2[i:length(I_nR_rS2)]) / sum(I_nR_rS2)
+    obs_HR2_rS2[i - 1]  <- sum(C_nR_rS2[i:length(I_nR_rS2)]) / sum(C_nR_rS2)
 
-    obs_FAR2_rS1[i - 1] <- sum(I_nR_rS1[i:length(I_nR_rS2)] ) / sum(I_nR_rS1)
-    obs_HR2_rS1[i - 1]  <- sum(C_nR_rS1[i:length(I_nR_rS2)] ) / sum(C_nR_rS1)
+    obs_FAR2_rS1[i - 1] <- sum(I_nR_rS1[i:length(I_nR_rS2)]) / sum(I_nR_rS1)
+    obs_HR2_rS1[i - 1]  <- sum(C_nR_rS1[i:length(I_nR_rS2)]) / sum(C_nR_rS1)
   }
 
   S1mu <- -meta_d1 / 2
   S1sd <- 1
   S2mu <-  meta_d1 / 2
   S2sd <- S1sd / s
-  mt1c1 <- (meta_d1 * t1c1 / d1);
+  mt1c1 <- (meta_d1 * t1c1 / d1)
 
   C_area_rS2 <- 1 - pnorm(mt1c1, S2mu, S2sd)
   I_area_rS2 <- 1 - pnorm(mt1c1, S1mu, S1sd)
@@ -634,7 +634,7 @@ fit_meta_d_SSE <- function(nr_s1, nr_s2, s = 1, d_min = -5, d_max = 5,
 
   bounds <- 5 * max(S1sd,
                     S2sd)
-  SSEmin <- Inf
+  sse_min <- Inf
 
   param_space <- purrr::map2(S1mu,
                             S2mu,
@@ -703,27 +703,27 @@ fit_meta_d_SSE <- function(nr_s1, nr_s2, s = 1, d_min = -5, d_max = 5,
     SSE_rS2[, n] <- purrr::map_dbl(SSE, min)
     inds <- unlist(purrr::map(SSE,
                               which.min))
-    rS2_ind[seq_len(inds), n] <- inds
+    rS2_ind[seq_len(length(inds)), n] <- inds
   }
 
   # update analysis
-  SSEtot <- rowSums(SSE_rS1) + rowSums(SSE_rS2)
-  SSEmin <- Inf
+  sse_total <- rowSums(SSE_rS1) + rowSums(SSE_rS2)
+  sse_min <- Inf
 
   meta_d <- vector("numeric", 1)
   meta_c <- vector("numeric", 1)
   t2c_rS1 <- NULL
   t2c_rS2 <- NULL
 
-  min_SSE <- which.min(SSEtot)
-  meta_d <- d_grid[[min_SSE]]
-  meta_c <- c_grid[[min_SSE]]
-  t2c_rS1 <- param_space[[min_SSE]][rS1_ind[[min_SSE]]]
-  t2c_rS2 <- param_space[[min_SSE]][c_ind[[min_SSE]] + rS2_ind[[min_SSE]] - 1]
-  est_HR2_rS1  <- est_HR2s_rS1[[min_SSE]][rS1_ind[[min_SSE]]]
-  est_FAR2_rS1 <- est_FAR2s_rS1[[min_SSE]][rS1_ind[[min_SSE]]]
-  est_HR2_rS2  <- est_HR2s_rS2[[min_SSE]][rS2_ind[[min_SSE]]]
-  est_FAR2_rS2 <- est_FAR2s_rS2[[min_SSE]][rS2_ind[[min_SSE]]]
+  min_sse <- which.min(sse_total)
+  meta_d <- d_grid[[min_sse]]
+  meta_c <- c_grid[[min_sse]]
+  t2c_rS1 <- param_space[[min_sse]][rS1_ind[[min_sse]]]
+  t2c_rS2 <- param_space[[min_sse]][c_ind[[min_sse]] + rS2_ind[[min_sse]] - 1]
+  est_HR2_rS1  <- est_HR2s_rS1[[min_sse]][rS1_ind[[min_sse]]]
+  est_FAR2_rS1 <- est_FAR2s_rS1[[min_sse]][rS1_ind[[min_sse]]]
+  est_HR2_rS2  <- est_HR2s_rS2[[min_sse]][rS2_ind[[min_sse]]]
+  est_FAR2_rS2 <- est_FAR2s_rS2[[min_sse]][rS2_ind[[min_sse]]]
 
   out <- data.frame(da = d_1,
                     meta_da = meta_d,
@@ -733,7 +733,7 @@ fit_meta_d_SSE <- function(nr_s1, nr_s2, s = 1, d_min = -5, d_max = 5,
                     s = s,
                     t2ca_rS1 = t2c_rS1,
                     t2ca_rS2 = t2c_rS2,
-                    SSE = SSEtot[[min_SSE]],
+                    SSE = sse_total[[min_sse]],
                     est_HR2_rS1 = est_HR2_rS1,
                     obs_HR2_rS1 = obs_HR2_rS1,
                     est_HR2_rS2 = est_HR2_rS2,

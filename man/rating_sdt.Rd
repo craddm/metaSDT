@@ -37,7 +37,7 @@ Response: B, rating: 2, count: 4
 
 Response: B, rating: 3, count: 1
 
-The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+The appropriate vector would be  nr_s1 <- c(60,30,10,7,4,1)
 
 For stimulus B, we would have the respective vector for responses to stimulus
 B, eg:
@@ -54,7 +54,7 @@ Response: B, rating: 2, count: 23
 
 Response: B, rating: 3, count: 61
 
-nR_S2 <- c(4,6,11,13,23,61)
+nr_s2 <- c(4,6,11,13,23,61)
 
 The helper function \code{sdt_counts} can be used to get the data into the
 right format.
