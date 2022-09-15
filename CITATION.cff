@@ -1,0 +1,118 @@
+# -----------------------------------------------------------
+# CITATION file created with {cffr} R package, v0.2.3
+# See also: https://docs.ropensci.org/cffr/
+# -----------------------------------------------------------
+ 
+cff-version: 1.2.0
+message: 'To cite package "metaSDT" in publications use:'
+type: software
+license: MIT
+title: 'metaSDT: Calculate Type 1 and Type 2 Signal Detection Measures'
+version: 0.6.0
+abstract: Type 1 and Type 2 signal detection measures for simple 2AFC tasks.
+authors:
+- family-names: Craddock
+  given-names: Matt
+  email: matt@mattcraddock.com
+preferred-citation:
+  type: manual
+  title: 'metaSDT: Calculate Type 1 and Type 2 Signal Detection Measures'
+  authors:
+  - family-names: Craddock
+    given-names: Matt
+    email: matt@mattcraddock.com
+  version: 0.6.0
+  abstract: Type 1 and Type 2 signal detection measures for simple 2AFC tasks.
+  repository-code: https://github.com/craddm/metaSDT
+  url: https://github.com/craddm/metaSDT
+  date-released: '2021-08-30'
+  contact:
+  - family-names: Craddock
+    given-names: Matt
+    email: matt@mattcraddock.com
+  license: MIT
+  year: '2021'
+repository-code: https://github.com/craddm/metaSDT
+url: https://github.com/craddm/metaSDT
+date-released: '2021-08-30'
+contact:
+- family-names: Craddock
+  given-names: Matt
+  email: matt@mattcraddock.com
+references:
+- type: software
+  title: dplyr
+  abstract: 'dplyr: A Grammar of Data Manipulation'
+  notes: Imports
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+    orcid: https://orcid.org/0000-0003-4757-117X
+  - family-names: François
+    given-names: Romain
+    orcid: https://orcid.org/0000-0002-2444-4226
+  - family-names: Henry
+    given-names: Lionel
+  - family-names: Müller
+    given-names: Kirill
+    orcid: https://orcid.org/0000-0002-1416-3412
+  year: '2022'
+  url: https://CRAN.R-project.org/package=dplyr
+- type: software
+  title: tidyr
+  abstract: 'tidyr: Tidy Messy Data'
+  notes: Imports
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  - family-names: Girlich
+    given-names: Maximilian
+  year: '2022'
+  url: https://CRAN.R-project.org/package=tidyr
+- type: software
+  title: rlang
+  abstract: 'rlang: Functions for Base Types and Core R and ''Tidyverse'' Features'
+  notes: Imports
+  authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2022'
+  url: https://CRAN.R-project.org/package=rlang
+- type: software
+  title: nleqslv
+  abstract: 'nleqslv: Solve Systems of Nonlinear Equations'
+  notes: Imports
+  authors:
+  - family-names: Hasselman
+    given-names: Berend
+  year: '2022'
+  url: https://CRAN.R-project.org/package=nleqslv
+- type: software
+  title: purrr
+  abstract: 'purrr: Functional Programming Tools'
+  notes: Imports
+  authors:
+  - family-names: Henry
+    given-names: Lionel
+    email: lionel@rstudio.com
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2022'
+  url: https://CRAN.R-project.org/package=purrr
+- type: software
+  title: testthat
+  abstract: 'testthat: Unit Testing for R'
+  notes: Suggests
+  authors:
+  - family-names: Wickham
+    given-names: Hadley
+    email: hadley@rstudio.com
+  year: '2022'
+  url: https://CRAN.R-project.org/package=testthat
