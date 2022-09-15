@@ -834,7 +834,7 @@ fit_meta_d_bal <- function(nR_S1,
   htm <- 1 - pnorm(theta_prime * meta_d_neg, meta_d_neg, s)
   ftm <- 1 - pnorm(theta_prime * meta_d_neg, 0, 1)
 
-  if (any(c(htp, ftp, htm, ftm) > .95) | any(c(htp, ftp, htm, ftm) < .05)) {
+  if (any(c(htp, ftp, htm, ftm) > .95) || any(c(htp, ftp, htm, ftm) < .05)) {
     stable <- 0
   } else {
     stable <- 1
