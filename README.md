@@ -7,6 +7,7 @@
 
 [![R-CMD-check](https://github.com/craddm/metaSDT/workflows/R-CMD-check/badge.svg)](https://github.com/craddm/metaSDT/actions)
 [![DOI](https://zenodo.org/badge/99712128.svg)](https://zenodo.org/badge/latestdoi/99712128)
+[![R-CMD-check](https://github.com/craddm/metaSDT/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/craddm/metaSDT/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This is an R implementation of Maniscalco and Lau’s methods of
@@ -23,7 +24,7 @@ You can install `metaSDT`’s development version from
 devtools::install_github("craddm/metaSDT")
 ```
 
-For further details on metacognitive/Type 2 SDT, see Maniscalco & Lau's website at
+For further details on metacognitive/Type 2 SDT, see their website at
 <http://www.columbia.edu/~bsm2105/type2sdt/> and the following
 publications:
 
