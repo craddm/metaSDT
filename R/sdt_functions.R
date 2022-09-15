@@ -63,17 +63,17 @@ type_1_sdt <- function(df,
 
   reps_only <- dplyr::filter(df, (!!resp_col) == 1)
 
-  s1_HR <- reps_only$proportions[[1]]
-  s1_FA <- reps_only$proportions[[2]]
+  s1_hr <- reps_only$proportions[[1]]
+  s1_fa <- reps_only$proportions[[2]]
 
-  d_prime <- (1 / s) * qnorm(s1_HR) - qnorm(s1_FA)
-  c_raw <- (-1 / (1 + s)) * (qnorm(s1_HR) + qnorm(s1_FA))
+  d_prime <- (1 / s) * qnorm(s1_hr) - qnorm(s1_fa)
+  c_raw <- (-1 / (1 + s)) * (qnorm(s1_hr) + qnorm(s1_fa))
   c_prime <- c_raw / d_prime
   data.frame(d_prime,
              c_raw,
              c_prime,
-             s1_HR,
-             s1_FA)
+             s1_hr,
+             s1_fa)
 }
 
 #' Type 1 SDT for rating data
@@ -99,7 +99,7 @@ type_1_sdt <- function(df,
 #'
 #' Response: B, rating: 3, count: 1
 #'
-#' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#' The appropriate vector would be  nr_s1 <- c(60,30,10,7,4,1)
 #'
 #' For stimulus B, we would have the respective vector for responses to stimulus
 #' B, eg:
@@ -116,7 +116,7 @@ type_1_sdt <- function(df,
 #'
 #' Response: B, rating: 3, count: 61
 #'
-#' nR_S2 <- c(4,6,11,13,23,61)
+#' nr_s2 <- c(4,6,11,13,23,61)
 #'
 #' The helper function \code{sdt_counts} can be used to get the data into the
 #' right format.
@@ -233,7 +233,7 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
 #'
 #' Response: B, rating: 3, count: 1
 #'
-#' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#' The appropriate vector would be nr_s1 <- c(60,30,10,7,4,1)
 #'
 #' For stimulus B, we would have the respective vector for responses to stimulus
 #' B, eg:
@@ -250,7 +250,7 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
 #'
 #' Response: B, rating: 3, count: 61
 #'
-#' nR_S2 <- c(4,6,11,13,23,61)
+#' nr_s2 <- c(4,6,11,13,23,61)
 #'
 #' The helper function \code{sdt_counts} can be used to get the data into the
 #' right format.
@@ -265,8 +265,8 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
 #' http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
 #' articles if using this command.
 #'
-#' @param nR_S1 Responses to S1 stimulus. See below for advice.
-#' @param nR_S2 Responses to S2 stimulus. See below for advice.
+#' @param nr_s1 Responses to S1 stimulus. See below for advice.
+#' @param nr_s2 Responses to S2 stimulus. See below for advice.
 #' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
 #'   1.
 #' @param add_constant Adds a small constant to the data (1/number of possible
@@ -282,20 +282,20 @@ sdt_counts <- function(df, stimulus = NULL, response = NULL,
 #' @import tidyr
 #' @importFrom stats optim pnorm qnorm
 #' @examples
-#' nR_S1 <- c(60,30,10,7,4,1)
-#' nR_S2 <- c(4,6,11,13,23,61)
-#' fit_meta_d_MLE(nR_S1, nR_S2)
+#' nr_s1 <- c(60,30,10,7,4,1)
+#' nr_s2 <- c(4,6,11,13,23,61)
+#' fit_meta_d_MLE(nr_s1, nr_s2)
 #' @export
 #'
 
-fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
+fit_meta_d_MLE <- function(nr_s1, nr_s2, s = 1, add_constant = TRUE) {
 
   if (add_constant) {
-    nR_S1 <- nR_S1 + (1 / length(nR_S1))
-    nR_S2 <- nR_S2 + (1 / length(nR_S2))
+    nr_s1 <- nr_s1 + (1 / length(nr_s1))
+    nr_s2 <- nr_s2 + (1 / length(nr_s2))
   }
 
-  n_ratings <- length(nR_S1) / 2
+  n_ratings <- length(nr_s1) / 2
   n_criteria <- 2 * n_ratings - 1
 
   A <- matrix(0, nrow = n_criteria - 2, ncol = n_criteria)
@@ -311,8 +311,8 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
   ratingFAR <- NULL
 
   for (c in 2:(n_ratings * 2)) {
-    ratingHR[c - 1] <- sum(nR_S2[c:length(nR_S2)]) / sum(nR_S2)
-    ratingFAR[c - 1] <- sum(nR_S1[c:length(nR_S1)]) / sum(nR_S1)
+    ratingHR[c - 1] <- sum(nr_s2[c:length(nr_s2)]) / sum(nr_s2)
+    ratingFAR[c - 1] <- sum(nr_s1[c:length(nr_s1)]) / sum(nr_s1)
   }
 
   t1_index <- n_ratings
@@ -329,8 +329,8 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
 
   params <- list("n_ratings" = n_ratings,
                  "d1" = d1,
-                 "nR_S1" = nR_S1,
-                 "nR_S2" = nR_S2,
+                 "nr_s1" = nr_s1,
+                 "nr_s2" = nr_s2,
                  "t1c1" = t1c1,
                  "s" = s)
   #Note that I suppress warnings from the optimizer about NaNs generated while
@@ -348,11 +348,11 @@ fit_meta_d_MLE <- function(nR_S1, nR_S2, s = 1, add_constant = TRUE) {
   t2c1 <- fit$par[2:length(fit$par)] + (meta_d1 * t1c1 / d1)
   logL <- -fit$value
 
-  I_nR_rS2 <- nR_S1[(n_ratings + 1):length(nR_S1)]
-  I_nR_rS1 <- nR_S2[seq(n_ratings, 1, -1)]
+  I_nR_rS2 <- nr_s1[(n_ratings + 1):length(nr_s1)]
+  I_nR_rS1 <- nr_s2[seq(n_ratings, 1, -1)]
 
-  C_nR_rS2 <- nR_S2[(n_ratings + 1):length(nR_S2)]
-  C_nR_rS1 <- nR_S1[seq(n_ratings, 1, -1)]
+  C_nR_rS2 <- nr_s2[(n_ratings + 1):length(nr_s2)]
+  C_nR_rS1 <- nr_s1[seq(n_ratings, 1, -1)]
   obs_FAR2_rS2 <- matrix(0, nrow = n_ratings - 1)
   obs_HR2_rS2 <- matrix(0, nrow = n_ratings - 1)
   obs_FAR2_rS1 <- matrix(0, nrow = n_ratings - 1)
@@ -471,12 +471,12 @@ fit_meta_d_logL <- function(x, parameters) {
   for (i in 1:parameters$n_ratings) {
 
     # S1 responses
-    nC_rS1[i] <- parameters$nR_S1[i]
-    nI_rS1[i] <- parameters$nR_S2[i]
+    nC_rS1[i] <- parameters$nr_s1[i]
+    nI_rS1[i] <- parameters$nr_s2[i]
 
     # S2 responses
-    nC_rS2[i] <- parameters$nR_S2[parameters$n_ratings + i]
-    nI_rS2[i] <- parameters$nR_S1[parameters$n_ratings + i]
+    nC_rS2[i] <- parameters$nr_s2[parameters$n_ratings + i]
+    nI_rS2[i] <- parameters$nr_s1[parameters$n_ratings + i]
   }
 
   # get type 2 probabilities
@@ -543,14 +543,14 @@ fit_meta_d_logL <- function(x, parameters) {
 #'2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating: 1, count:
 #'7 Response: B, rating: 2, count: 4 Response: B, rating: 3, count: 1
 #'
-#'The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#'The appropriate vector would be nr_s1 <- c(60,30,10,7,4,1)
 #'
 #'For stimulus B, we would have the respective vector for responses to stimulus
 #'B, eg: Response: A, rating: 3, count: 4 Response: A, rating: 2, count: 6
 #'Response: A, rating: 1, count: 11 Response: B, rating: 1, count: 13 Response:
 #'B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 #'
-#'nR_S2 <- c(4,6,11,13,23,61)
+#'nr_s2 <- c(4,6,11,13,23,61)
 #'
 #'The output is a dataframe with various metacognitive measures, including
 #'m-ratio and meta-d, estimated through minimization of SSE.
@@ -563,8 +563,8 @@ fit_meta_d_logL <- function(x, parameters) {
 #'http://www.columbia.edu/~bsm2105/type2sdt/ Please cite that page and their
 #'articles if using this command.
 #'
-#'@param nR_S1 Responses to S1 stimulus. See below for advice.
-#'@param nR_S2 Responses to S2 stimulus. See below for advice.
+#'@param nr_s1 Responses to S1 stimulus. See below for advice.
+#'@param nr_s2 Responses to S2 stimulus. See below for advice.
 #'@param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
 #'  1.
 #'@param d_min Minimum bound for d'
@@ -579,47 +579,47 @@ fit_meta_d_logL <- function(x, parameters) {
 #'@importFrom purrr map_dbl map2 map
 #' @family [meta_d]
 #' @examples
-#' nR_S1 <- c(60,30,10,7,4,1)
-#' nR_S2 <- c(4,6,11,13,23,61)
-#' fit_meta_d_SSE(nR_S1, nR_S2)
+#' nr_s1 <- c(60,30,10,7,4,1)
+#' nr_s2 <- c(4,6,11,13,23,61)
+#' fit_meta_d_SSE(nr_s1, nr_s2)
 #'@export
 
-fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
+fit_meta_d_SSE <- function(nr_s1, nr_s2, s = 1, d_min = -5, d_max = 5,
                            d_grain = .01, add_constant = TRUE) {
 
   if (add_constant) {
-    nR_S1 <- nR_S1 + (1 / length(nR_S1))
-    nR_S2 <- nR_S2 + (1 / length(nR_S2))
+    nr_s1 <- nr_s1 + (1 / length(nr_s1))
+    nr_s2 <- nr_s2 + (1 / length(nr_s2))
   }
 
-  n_ratings <- length(nR_S1) / 2
+  n_ratings <- length(nr_s1) / 2
   n_criteria <- 2 * n_ratings - 1
 
-  S1_HR <- sum(nR_S2[(n_ratings + 1):(n_ratings * 2)]) / sum(nR_S2)
-  S1_FA <- sum(nR_S1[(n_ratings + 1):(n_ratings * 2)]) / sum(nR_S1)
+  s1_hr <- sum(nr_s2[(n_ratings + 1):(n_ratings * 2)]) / sum(nr_s2)
+  s1_fa <- sum(nr_s1[(n_ratings + 1):(n_ratings * 2)]) / sum(nr_s1)
 
-  d_1 <- (1 / s) * qnorm(S1_HR) - qnorm(S1_FA)
-  c_1 <- (-1 / (1 + s)) * (qnorm(S1_HR) + qnorm(S1_FA))
+  d_1 <- (1 / s) * qnorm(s1_hr) - qnorm(s1_fa)
+  c_1 <- (-1 / (1 + s)) * (qnorm(s1_hr) + qnorm(s1_fa))
   c_prime <- c_1 / d_1
 
   obs_HR2_rS1 <- NULL
   obs_FAR2_rS1 <- NULL
 
   for (i in 1:(n_ratings - 1)) {
-    obs_HR2_rS1[i] <- sum(nR_S1[1:i]) / sum(nR_S1[1:n_ratings])
-    obs_FAR2_rS1[i] <- sum(nR_S2[1:i]) / sum(nR_S2[1:n_ratings])
+    obs_HR2_rS1[i] <- sum(nr_s1[1:i]) / sum(nr_s1[1:n_ratings])
+    obs_FAR2_rS1[i] <- sum(nr_s2[1:i]) / sum(nr_s2[1:n_ratings])
   }
 
   obs_HR2_rS2 <- NULL
   obs_FAR2_rS2 <- NULL
   for (i in (n_ratings + 2):(2 * n_ratings)) {
     obs_HR2_rS2[(i - (n_ratings + 2) + 1)] <-
-      sum(nR_S2[i:(n_ratings * 2)]) /
-      sum(nR_S2[(n_ratings + 1):(n_ratings * 2)])
+      sum(nr_s2[i:(n_ratings * 2)]) /
+      sum(nr_s2[(n_ratings + 1):(n_ratings * 2)])
 
     obs_FAR2_rS2[(i - (n_ratings + 2) + 1)] <-
-      sum(nR_S1[i:(n_ratings * 2)]) /
-      sum(nR_S1[(n_ratings + 1):(n_ratings * 2)])
+      sum(nr_s1[i:(n_ratings * 2)]) /
+      sum(nr_s1[(n_ratings + 1):(n_ratings * 2)])
   }
 
   d_grid <- seq(d_min,
@@ -679,7 +679,7 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
                                    min)
     inds <- unlist(purrr::map(SSE,
                               which.min))
-    rS1_ind[seq_along(length(inds)), n] <- inds
+    rS1_ind[seq_len(length(inds)), n] <- inds
   }
 
   # fit type 2 data for S2 responses
@@ -703,7 +703,7 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
     SSE_rS2[, n] <- purrr::map_dbl(SSE, min)
     inds <- unlist(purrr::map(SSE,
                               which.min))
-    rS2_ind[1:length(inds), n] <- inds
+    rS2_ind[seq_len(inds), n] <- inds
   }
 
   # update analysis
@@ -756,17 +756,17 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
 #' rating: 2, count: 30 Response: A, rating: 1, count: 10 Response: B, rating:
 #' 1, count: 7 Response: B, rating: 2, count: 4 Response: B, rating: 3, count: 1
 #'
-#' The appropriate vector would be nR_S1 <- c(60,30,10,7,4,1)
+#' The appropriate vector would be nr_s1 <- c(60,30,10,7,4,1)
 #'
 #' For stimulus B, we would have the respective vector for responses to stimulus
 #' B, eg: Response: A, rating: 3, count: 4 Response: A, rating: 2, count: 6
 #' Response: A, rating: 1, count: 11 Response: B, rating: 1, count: 13 Response:
 #' B, rating: 2, count: 23 Response: B, rating: 3, count: 61
 #'
-#' nR_S2 <- c(4,6,11,13,23,61)
+#' nr_s2 <- c(4,6,11,13,23,61)
 
-#' @param nR_S1 Responses to S1 stimulus. See below for advice.
-#' @param nR_S2 Responses to S2 stimulus. See below for advice.
+#' @param nr_s1 Responses to S1 stimulus. See below for advice.
+#' @param nr_s2 Responses to S2 stimulus. See below for advice.
 #' @param s Ratio of standard deviations for the S1 and S2 stimulus. Defaults to
 #'   1.
 #' @param add_constant Add a small constant to all cells to adjust for boundary
@@ -781,36 +781,36 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
 #' @importFrom nleqslv nleqslv
 #' @family [meta_d]
 #' @examples
-#' nR_S1 <- c(60,30,10,7,4,1)
-#' nR_S2 <- c(4,6,11,13,23,61)
-#' fit_meta_d_bal(nR_S1, nR_S2)
+#' nr_s1 <- c(60,30,10,7,4,1)
+#' nr_s2 <- c(4,6,11,13,23,61)
+#' fit_meta_d_bal(nr_s1, nr_s2)
 #' @export
 #'
 
-fit_meta_d_bal <- function(nR_S1,
-                           nR_S2,
+fit_meta_d_bal <- function(nr_s1,
+                           nr_s2,
                            s = 1,
                            add_constant = FALSE) {
 
   if (add_constant) {
-    nR_S1 <- nR_S1 + (1 / length(nR_S1))
-    nR_S2 <- nR_S2 + (1 / length(nR_S2))
+    nr_s1 <- nr_s1 + (1 / length(nr_s1))
+    nr_s2 <- nr_s2 + (1 / length(nr_s2))
   }
 
-  n_ratings <- length(nR_S1) / 2
+  n_ratings <- length(nr_s1) / 2
 
-  S1_HR <- sum(nR_S1[1:n_ratings]) / sum(nR_S1)
-  S1_FA <- sum(nR_S2[1:n_ratings]) / sum(nR_S2)
+  s1_hr <- sum(nr_s1[1:n_ratings]) / sum(nr_s1)
+  s1_fa <- sum(nr_s2[1:n_ratings]) / sum(nr_s2)
 
-  d_prime <- (1 / s) * qnorm(S1_HR) - qnorm(S1_FA)
-  t1c1 <- (-1 / (1 + s)) * (qnorm(S1_HR) + qnorm(S1_FA))
+  d_prime <- (1 / s) * qnorm(s1_hr) - qnorm(s1_fa)
+  t1c1 <- (-1 / (1 + s)) * (qnorm(s1_hr) + qnorm(s1_fa))
 
-  Hp <- nR_S1[[1]] / sum(nR_S1[1:n_ratings])
-  Hm <- nR_S2[[n_ratings * 2]] / sum(nR_S2[(n_ratings + 1):(n_ratings * 2)])
-  Fm <- nR_S1[[n_ratings * 2]] / sum(nR_S1[(n_ratings + 1):(n_ratings * 2)])
-  Fp <- nR_S2[[1]] / sum(nR_S2[1:n_ratings])
+  Hp <- nr_s1[[1]] / sum(nr_s1[1:n_ratings])
+  Hm <- nr_s2[[n_ratings * 2]] / sum(nr_s2[(n_ratings + 1):(n_ratings * 2)])
+  Fm <- nr_s1[[n_ratings * 2]] / sum(nr_s1[(n_ratings + 1):(n_ratings * 2)])
+  Fp <- nr_s2[[1]] / sum(nr_s2[1:n_ratings])
 
-  theta <- -qnorm(S1_FA)
+  theta <- -qnorm(s1_fa)
   theta_prime <- theta / d_prime
   x0 <- c(theta, d_prime)
 
@@ -824,9 +824,11 @@ fit_meta_d_bal <- function(nR_S1,
   meta_d_plus <- ep$x[[2]]
   x0 <- c(theta_prime, d_prime)
 
-  em <- nleqslv(x0, fit_metad_minus, method = "Newton", th = theta_prime,
-                hm = Hm, fm = Fm, global = "pwldog",
-                control = list(delta = "cauchy", ftol = 1e-06), xscalm = "auto")
+  em <- nleqslv::nleqslv(x0, fit_metad_minus,
+    method = "Newton", th = theta_prime,
+    hm = Hm, fm = Fm, global = "pwldog",
+    control = list(delta = "cauchy", ftol = 1e-06),
+    xscalm = "auto")
   meta_d_neg <- em$x[[2]]
 
   htp <- 1 - pnorm(theta_prime * meta_d_plus, meta_d_plus, s)
@@ -840,7 +842,7 @@ fit_meta_d_bal <- function(nR_S1,
     stable <- 1
   }
 
-  r <- (S1_HR + S1_FA) / 2
+  r <- (s1_hr + s1_fa) / 2
   meta_d_bal <- r * meta_d_plus + (1 - r) * meta_d_neg
 
   data.frame(d_prime = d_prime,
