@@ -55,10 +55,10 @@ type_1_sdt <- function(df,
   df <- dplyr::group_by(df, !!stim_col)
 
   if (add_constant) {
-    df <- dplyr::mutate(df, proportions = ( (!!count_col) + 1 /
-                                       n()) / (sum( (!!count_col)) + 1))
-  } else{
-    df <- dplyr::mutate(df, proportions = (!!count_col) / sum( (!!count_col)))
+    df <- dplyr::mutate(df, proportions = ((!!count_col) + 1 /
+                                       n()) / (sum((!!count_col)) + 1))
+  } else {
+    df <- dplyr::mutate(df, proportions = (!!count_col) / sum((!!count_col)))
   }
 
   reps_only <- dplyr::filter(df, (!!resp_col) == 1)
@@ -679,7 +679,7 @@ fit_meta_d_SSE <- function(nR_S1, nR_S2, s = 1, d_min = -5, d_max = 5,
                                    min)
     inds <- unlist(purrr::map(SSE,
                               which.min))
-    rS1_ind[1:length(inds), n] <- inds
+    rS1_ind[seq_along(length(inds)), n] <- inds
   }
 
   # fit type 2 data for S2 responses
@@ -814,8 +814,11 @@ fit_meta_d_bal <- function(nR_S1,
   theta_prime <- theta / d_prime
   x0 <- c(theta, d_prime)
 
-  ep <- nleqslv::nleqslv(x0, fit_metad_plus, method = "Newton", th = theta_prime,
-                hp = Hp, fp = Fp, global = "pwldog",
+  ep <- nleqslv::nleqslv(x0,
+   fit_metad_plus, method = "Newton",
+   th = theta_prime,
+   hp = Hp, fp = Fp,
+    global = "pwldog",
                 control = list(delta = "cauchy", ftol = 1e-06), xscalm = "auto")
 
   meta_d_plus <- ep$x[[2]]
