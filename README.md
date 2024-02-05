@@ -44,10 +44,10 @@ it is based.
 The `fit_meta_d_SSE` and `fit_meta_d_MLE` commands require data in the
 same format outlined on M & L’s webpage, as follows:
 
-Suppose there are two stimuli, A, and B, and three confidence ratings.
-The possible responses are
+Suppose there are two stimuli, A, and B, and three confidence ratings -
+high (3), medium(2), and low(1). The possible responses are
 
-A1, A2, A3, B3, B2, B1.
+A3, A2, A1, B1, B2, B3.
 
 Input to the function should be counts for each of these responses
 separately for each stimulus type.
