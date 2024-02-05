@@ -83,7 +83,7 @@ type_1_sdt <- function(df,
 #' of confidence in their judgements.
 #'
 #' The expected input is two vectors, one for responses to each stimulus,
-#' encoding the observers response and confidence. For example, for two stimului
+#' encoding the observers response and confidence. For example, for two stimuli
 #' labelled A and B, with three confidence ratings, participants could respond
 #' to stimulus A as follows:
 #'
